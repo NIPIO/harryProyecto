@@ -2,22 +2,21 @@ import api from "../api";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
-import { TablaCuentaCorriente } from "./TablaCuentaCorriente";
+import { TablaVendedores } from "./TablaVendedores";
 import { CabeceraBody } from "../Comun/CabeceraBody";
 import { useState } from "react";
 
-export const CuentaCorriente = ({ match, history }) => {
-    const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
+export const Vendedores = () => {
+    const [vendedores, setVendedores] = useState([]);
 
-    const allCuentasCorrientes = useQuery("cuentasCorrientes", () =>
+    const allVendedores = useQuery("vendedores", () =>
         api
-            .getCuentasCorrientes()
-            .then((res) => setCuentasCorrientes(res.data))
+            .getVendedores()
+            .then((res) => setVendedores(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
     );
-
     let location = useLocation();
 
     return (
@@ -27,15 +26,13 @@ export const CuentaCorriente = ({ match, history }) => {
                     <CabeceraBody path={location.pathname} />
                     <div className="content  text-center">
                         <div className="container-fluid">
-                            {allCuentasCorrientes.isLoading ? (
+                            {allVendedores.isLoading ? (
                                 <Spinner animation="border" role="status">
                                     <span className="visually-hidden"></span>
                                 </Spinner>
                             ) : (
                                 <>
-                                    <TablaCuentaCorriente
-                                        cuentas={cuentasCorrientes}
-                                    />
+                                    <TablaVendedores vendedores={vendedores} />
                                 </>
                             )}
                         </div>

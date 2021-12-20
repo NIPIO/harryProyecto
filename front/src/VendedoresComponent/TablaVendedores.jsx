@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap";
 
-export const TablaClientes = ({ clientes }) => {
+export const TablaVendedores = ({ vendedores }) => {
     return (
         <>
             <Table responsive>
@@ -12,7 +12,7 @@ export const TablaClientes = ({ clientes }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {clientes.map((element) => (
+                    {vendedores.map((element) => (
                         <tr key={element.id}>
                             <td>{element.nombre}</td>
                             <td>{element.email}</td>

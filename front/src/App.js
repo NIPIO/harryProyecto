@@ -2,7 +2,8 @@
 import { Productos } from "./ProductosComponent/Productos";
 import { Clientes } from "./ClientesComponent/Clientes";
 import { CuentaCorriente } from "./CuentaCorrienteComponent/CuentaCorriente";
-import { Usuarios } from "./UsuariosComponent/Usuarios";
+import { Vendedores } from "./VendedoresComponent/Vendedores";
+import { Ventas } from "./VentasComponent/Ventas";
 // COMPONENTES
 
 // TEMPLATE
@@ -24,13 +25,14 @@ function App() {
             <div>
                 <Routes>
                     <Route exact path="/productos" element={<Productos />} />
+                    <Route exact path="/ventas" element={<Ventas />} />
                     <Route exact path="/clientes" element={<Clientes />} />
                     <Route
                         exact
                         path="/cuenta-corriente"
                         element={<CuentaCorriente />}
                     />
-                    <Route exact path="/usuarios" element={<Usuarios />} />
+                    <Route exact path="/vendedores" element={<Vendedores />} />
                 </Routes>
             </div>
         </div>

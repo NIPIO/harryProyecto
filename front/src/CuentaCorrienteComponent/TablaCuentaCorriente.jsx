@@ -1,36 +1,28 @@
 import { Table } from "react-bootstrap";
 
-export const TablaCuentaCorriente = () => {
+export const TablaCuentaCorriente = ({ cuentas }) => {
     return (
         <>
             <Table responsive>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <th key={index}>Table heading</th>
-                        ))}
+                        <th>Producto</th>
+                        <th>Marca</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>En Transito</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <td key={index}>Table cell {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <td key={index}>Table cell {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <td key={index}>Table cell {index}</td>
-                        ))}
-                    </tr>
+                    {cuentas.map((element) => (
+                        <tr key={element.id}>
+                            <td>{element.nombre}</td>
+                            <td>{element.marca}</td>
+                            <td>{element.precio}</td>
+                            <td>{element.stock}</td>
+                            <td>{element.en_transito}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </Table>
         </>

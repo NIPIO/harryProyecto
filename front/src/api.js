@@ -11,6 +11,20 @@ const API_PORT = "http://localhost:8000";
 const api = {
     getProductos: () =>
         client.get(API_PORT + "/admin/productos", {}).then((res) => res.data),
+
+    getVendedores: () =>
+        client.get(API_PORT + "/admin/vendedores", {}).then((res) => res.data),
+
+    getClientes: () =>
+        client.get(API_PORT + "/admin/clientes", {}).then((res) => res.data),
+
+    getVentas: () =>
+        client.get(API_PORT + "/admin/ventas", {}).then((res) => res.data),
+
+    getCuentasCorrientes: () =>
+        client
+            .get(API_PORT + "/admin/cuentas-corrientes", {})
+            .then((res) => res.data),
 };
 
 export default api;

@@ -42,54 +42,35 @@ export const LeftMenu = () => {
                                         <p>Productos</p>
                                     </a>
                                 </li>
-                                <ul
-                                    className="nav nav-pills nav-sidebar flex-column"
-                                    data-widget="treeview"
-                                    role="menu"
-                                    data-accordion="false"
-                                >
-                                    <li className="nav-item">
-                                        <a
-                                            href="/clientes"
-                                            className="nav-link"
-                                        >
-                                            <i className="nav-icon fas fa-columns" />
-                                            <p>Clientes</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ul
-                                    className="nav nav-pills nav-sidebar flex-column"
-                                    data-widget="treeview"
-                                    role="menu"
-                                    data-accordion="false"
-                                >
-                                    <li className="nav-item">
-                                        <a
-                                            href="/cuenta-corriente"
-                                            className="nav-link"
-                                        >
-                                            <i className="nav-icon fas fa-columns" />
-                                            <p>Cuentas Corrientes</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <ul
-                                    className="nav nav-pills nav-sidebar flex-column"
-                                    data-widget="treeview"
-                                    role="menu"
-                                    data-accordion="false"
-                                >
-                                    <li className="nav-item">
-                                        <a
-                                            href="/usuarios"
-                                            className="nav-link"
-                                        >
-                                            <i className="nav-icon fas fa-columns" />
-                                            <p>Usuarios</p>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <li className="nav-item">
+                                    <a href="/ventas" className="nav-link">
+                                        <i className="nav-icon fas fa-columns" />
+                                        <p>Ventas</p>
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="/clientes" className="nav-link">
+                                        <i className="nav-icon fas fa-columns" />
+                                        <p>Clientes</p>
+                                    </a>
+                                </li>
+
+                                <li className="nav-item">
+                                    <a
+                                        href="/cuenta-corriente"
+                                        className="nav-link"
+                                    >
+                                        <i className="nav-icon fas fa-columns" />
+                                        <p>Cuentas Corrientes</p>
+                                    </a>
+                                </li>
+
+                                <li className="nav-item">
+                                    <a href="/vendedores" className="nav-link">
+                                        <i className="nav-icon fas fa-columns" />
+                                        <p>Vendedores</p>
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
                     </div>
