@@ -4,40 +4,45 @@ import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { MDBDataTable } from "mdbreact";
-import { ModalNuevaCtaCte } from "./ModalNuevaCtaCte";
+import { ModalNuevaMarca } from "./ModalNuevaMarca";
 import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
 
-export const CuentaCorriente = ({ match, history }) => {
-    const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
+export const Marcas = ({ match, history }) => {
+    const [ventas, setVentas] = useState([]);
     const [modal, setModal] = useState(false);
 
     const data = {
         columns: [
             {
-                label: "Proveedor",
-                field: "proveedor",
+                label: "Marcas",
+                field: "cliente_id",
                 width: 100,
                 sort: "asc",
             },
             {
-                label: "Saldo",
-                field: "saldo",
+                label: "Stock",
+                field: "producto_id",
+                width: 100,
+                sort: "asc",
+            },
+            {
+                label: "En transito",
+                field: "producto_id",
                 width: 100,
                 sort: "asc",
             },
         ],
-        rows: cuentasCorrientes,
+        rows: ventas,
     };
 
-    const allCuentasCorrientes = useQuery("cuentasCorrientes", () =>
+    const allVentas = useQuery("ventar", () =>
         api
-            .getCuentasCorrientes()
-            .then((res) => setCuentasCorrientes(res.data))
+            .getVentas()
+            .then((res) => setVentas(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
     );
-
     let location = useLocation();
 
     return (
@@ -52,40 +57,42 @@ export const CuentaCorriente = ({ match, history }) => {
                                     variant="success"
                                     onClick={() => setModal(true)}
                                 >
-                                    Nueva Venta
+                                    Nueva Marca
                                 </Button>
                             </Col>
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                {allCuentasCorrientes.isLoading ? (
+                                {allVentas.isLoading ? (
                                     <Spinner animation="border" role="status">
                                         <span className="visually-hidden"></span>
                                     </Spinner>
                                 ) : (
-                                    <MDBDataTable
-                                        scrollX
-                                        width="100px"
-                                        striped
-                                        bordered
-                                        displayEntries={false}
-                                        small
-                                        searchLabel="Buscar"
-                                        sorting={true}
-                                        infoLabel={[
-                                            " ",
-                                            "de",
-                                            "de",
-                                            "registos",
-                                        ]}
-                                        data={data}
-                                    />
+                                    <>
+                                        <MDBDataTable
+                                            scrollX
+                                            width="100px"
+                                            striped
+                                            bordered
+                                            displayEntries={false}
+                                            small
+                                            searchLabel="Buscar"
+                                            sorting={true}
+                                            infoLabel={[
+                                                " ",
+                                                "de",
+                                                "de",
+                                                "registos",
+                                            ]}
+                                            data={data}
+                                        />
+                                    </>
                                 )}
                             </div>
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevaCtaCte show={modal} setModal={() => setModal()} />
+                <ModalNuevaMarca show={modal} setModal={() => setModal()} />
             </div>
         </>
     );

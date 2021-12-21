@@ -38,19 +38,25 @@ export const LeftMenu = () => {
                             >
                                 <li className="nav-item">
                                     <a href="/productos" className="nav-link">
-                                        <i className="nav-icon fas fa-columns" />
+                                        <i className="nav-icon fas fa-mobile-alt" />
                                         <p>Productos</p>
                                     </a>
                                 </li>
                                 <li className="nav-item">
-                                    <a href="/ventas" className="nav-link">
+                                    <a href="/marcas" className="nav-link">
                                         <i className="nav-icon fas fa-columns" />
+                                        <p>Marcas</p>
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="/ventas" className="nav-link">
+                                        <i class=" nav-icon fas fa-dollar-sign"></i>
                                         <p>Ventas</p>
                                     </a>
                                 </li>
                                 <li className="nav-item">
                                     <a href="/clientes" className="nav-link">
-                                        <i className="nav-icon fas fa-columns" />
+                                        <i className="nav-icon fas fa-user-friends" />
                                         <p>Clientes</p>
                                     </a>
                                 </li>
@@ -60,14 +66,14 @@ export const LeftMenu = () => {
                                         href="/cuenta-corriente"
                                         className="nav-link"
                                     >
-                                        <i className="nav-icon fas fa-columns" />
+                                        <i className="nav-icon fas fa-university" />
                                         <p>Cuentas Corrientes</p>
                                     </a>
                                 </li>
 
                                 <li className="nav-item">
                                     <a href="/vendedores" className="nav-link">
-                                        <i className="nav-icon fas fa-columns" />
+                                        <i className="nav-icon fas fa-user-circle" />
                                         <p>Vendedores</p>
                                     </a>
                                 </li>

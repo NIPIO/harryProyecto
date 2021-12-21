@@ -1,11 +1,11 @@
 import api from "../../api";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
-import { Spinner, Button } from "react-bootstrap";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { MDBDataTable } from "mdbreact";
 import { ModalNuevoVendedor } from "./ModalNuevoVendedor";
+import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
 
 export const Vendedores = () => {
     const [vendedores, setVendedores] = useState([]);
@@ -50,36 +50,45 @@ export const Vendedores = () => {
             <div>
                 <div className="content-wrapper">
                     <CabeceraBody path={location.pathname} />
-                    <div className="content  text-center">
-                        <div class="w-100 ">
-                            <div class=" w-50" style={{ float: "right" }}>
+                    <Container>
+                        <Row>
+                            <Col md={12}>
                                 <Button
                                     variant="success"
-                                    style={{ float: "right" }}
                                     onClick={() => setModal(true)}
                                 >
-                                    Nuevo Vendedor
+                                    Nueva Venta
                                 </Button>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <div className="container-fluid text-center">
+                                {allVendedores.isLoading ? (
+                                    <Spinner animation="border" role="status">
+                                        <span className="visually-hidden"></span>
+                                    </Spinner>
+                                ) : (
+                                    <MDBDataTable
+                                        scrollX
+                                        width="100px"
+                                        striped
+                                        bordered
+                                        displayEntries={false}
+                                        small
+                                        searchLabel="Buscar"
+                                        sorting={true}
+                                        infoLabel={[
+                                            " ",
+                                            "de",
+                                            "de",
+                                            "registos",
+                                        ]}
+                                        data={data}
+                                    />
+                                )}
                             </div>
-                        </div>
-                        <div className="container-fluid">
-                            {allVendedores.isLoading ? (
-                                <Spinner animation="border" role="status">
-                                    <span className="visually-hidden"></span>
-                                </Spinner>
-                            ) : (
-                                <MDBDataTable
-                                    scrollY
-                                    scrollX
-                                    maxHeight="200px"
-                                    striped
-                                    bordered
-                                    small
-                                    data={data}
-                                />
-                            )}
-                        </div>
-                    </div>
+                        </Row>
+                    </Container>
                 </div>
                 <ModalNuevoVendedor show={modal} setModal={() => setModal()} />
             </div>

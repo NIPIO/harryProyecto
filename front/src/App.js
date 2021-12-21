@@ -1,16 +1,17 @@
 // COMPONENTES
-import { Productos } from "./ProductosComponent/Productos";
-import { Clientes } from "./ClientesComponent/Clientes";
-import { CuentaCorriente } from "./CuentaCorrienteComponent/CuentaCorriente";
-import { Vendedores } from "./VendedoresComponent/Vendedores";
-import { Ventas } from "./VentasComponent/Ventas";
+import { Productos } from "./Componentes/ProductosComponent/Productos";
+import { Clientes } from "./Componentes/ClientesComponent/Clientes";
+import { CuentaCorriente } from "./Componentes/CuentaCorrienteComponent/CuentaCorriente";
+import { Vendedores } from "./Componentes/VendedoresComponent/Vendedores";
+import { Marcas } from "./Componentes/MarcasComponent/Marcas";
+import { Ventas } from "./Componentes/VentasComponent/Ventas";
 // COMPONENTES
 
 // TEMPLATE
-import { Navigation } from "./ZTemplateComponent/Navigation";
-import { LeftMenu } from "./ZTemplateComponent/LeftMenu";
-// import { Content } from "./ZTemplateComponent/Content";
-import { SideBar } from "./ZTemplateComponent/SideBar";
+import { Navigation } from "./Comun/TemplateComponent/Navigation";
+import { LeftMenu } from "./Comun/TemplateComponent/LeftMenu";
+// import { Content } from "./Comun/TemplateComponent/Content";
+import { SideBar } from "./Comun/TemplateComponent/SideBar";
 // TEMPLATE
 
 import { Routes, Route } from "react-router-dom";
@@ -24,15 +25,16 @@ function App() {
             <SideBar />
             <div>
                 <Routes>
-                    <Route exact path="/productos" element={<Productos />} />
-                    <Route exact path="/ventas" element={<Ventas />} />
-                    <Route exact path="/clientes" element={<Clientes />} />
+                    <Route path="/productos" element={<Productos />} />
+                    <Route path="/ventas" element={<Ventas />} />
+                    <Route path="/clientes" element={<Clientes />} />
+                    <Route path="/marcas" element={<Marcas />} />
+
                     <Route
-                        exact
                         path="/cuenta-corriente"
                         element={<CuentaCorriente />}
                     />
-                    <Route exact path="/vendedores" element={<Vendedores />} />
+                    <Route path="/vendedores" element={<Vendedores />} />
                 </Routes>
             </div>
         </div>
