@@ -69,13 +69,13 @@ export const Content = () => {
                                         <h3 className="card-title">Products</h3>
                                         <div className="card-tools">
                                             <a
-                                                href="#"
+                                                href="/productos"
                                                 className="btn btn-tool btn-sm"
                                             >
                                                 <i className="fas fa-download" />
                                             </a>
                                             <a
-                                                href="#"
+                                                href="/productos"
                                                 className="btn btn-tool btn-sm"
                                             >
                                                 <i className="fas fa-bars" />
@@ -112,7 +112,7 @@ export const Content = () => {
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="#"
+                                                            href="/productos"
                                                             className="text-muted"
                                                         >
                                                             <i className="fas fa-search" />
@@ -138,7 +138,7 @@ export const Content = () => {
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="#"
+                                                            href="/productos"
                                                             className="text-muted"
                                                         >
                                                             <i className="fas fa-search" />
@@ -164,7 +164,7 @@ export const Content = () => {
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="#"
+                                                            href="/productos"
                                                             className="text-muted"
                                                         >
                                                             <i className="fas fa-search" />
@@ -193,7 +193,7 @@ export const Content = () => {
                                                     </td>
                                                     <td>
                                                         <a
-                                                            href="#"
+                                                            href="/productos"
                                                             className="text-muted"
                                                         >
                                                             <i className="fas fa-search" />
@@ -263,13 +263,13 @@ export const Content = () => {
                                         </h3>
                                         <div className="card-tools">
                                             <a
-                                                href="#"
+                                                href="/productos"
                                                 className="btn btn-sm btn-tool"
                                             >
                                                 <i className="fas fa-download" />
                                             </a>
                                             <a
-                                                href="#"
+                                                href="/productos"
                                                 className="btn btn-sm btn-tool"
                                             >
                                                 <i className="fas fa-bars" />

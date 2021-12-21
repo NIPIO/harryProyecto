@@ -8,7 +8,7 @@ export const Navigation = () => {
                             <a
                                 className="nav-link"
                                 data-widget="pushmenu"
-                                href="#"
+                                href="/productos"
                                 role="button"
                             >
                                 <i className="fas fa-bars" />
@@ -20,7 +20,7 @@ export const Navigation = () => {
                             <a
                                 className="nav-link"
                                 data-widget="navbar-search"
-                                href="#"
+                                href="/productos"
                                 role="button"
                             >
                                 <i className="fas fa-search" />
@@ -57,7 +57,7 @@ export const Navigation = () => {
                             <a
                                 className="nav-link"
                                 data-toggle="dropdown"
-                                href="#"
+                                href="/productos"
                             >
                                 <i className="far fa-comments" />
                                 <span className="badge badge-danger navbar-badge">
@@ -65,7 +65,7 @@ export const Navigation = () => {
                                 </span>
                             </a>
                             <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                <a href="#" className="dropdown-item">
+                                <a href="/productos" className="dropdown-item">
                                     <div className="media">
                                         <img
                                             src="dist/img/user1-128x128.jpg"
@@ -90,7 +90,7 @@ export const Navigation = () => {
                                     </div>
                                 </a>
                                 <div className="dropdown-divider" />
-                                <a href="#" className="dropdown-item">
+                                <a href="/productos" className="dropdown-item">
                                     <div className="media">
                                         <img
                                             src="dist/img/user8-128x128.jpg"
@@ -115,7 +115,7 @@ export const Navigation = () => {
                                     </div>
                                 </a>
                                 <div className="dropdown-divider" />
-                                <a href="#" className="dropdown-item">
+                                <a href="/productos" className="dropdown-item">
                                     <div className="media">
                                         <img
                                             src="dist/img/user3-128x128.jpg"
@@ -141,7 +141,7 @@ export const Navigation = () => {
                                 </a>
                                 <div className="dropdown-divider" />
                                 <a
-                                    href="#"
+                                    href="/productos"
                                     className="dropdown-item dropdown-footer"
                                 >
                                     See All Messages
@@ -152,7 +152,7 @@ export const Navigation = () => {
                             <a
                                 className="nav-link"
                                 data-toggle="dropdown"
-                                href="#"
+                                href="/productos"
                             >
                                 <i className="far fa-bell" />
                                 <span className="badge badge-warning navbar-badge">
@@ -164,7 +164,7 @@ export const Navigation = () => {
                                     15 Notifications
                                 </span>
                                 <div className="dropdown-divider" />
-                                <a href="#" className="dropdown-item">
+                                <a href="/productos" className="dropdown-item">
                                     <i className="fas fa-envelope mr-2" /> 4 new
                                     messages
                                     <span className="float-right text-muted text-sm">
@@ -172,7 +172,7 @@ export const Navigation = () => {
                                     </span>
                                 </a>
                                 <div className="dropdown-divider" />
-                                <a href="#" className="dropdown-item">
+                                <a href="/productos" className="dropdown-item">
                                     <i className="fas fa-users mr-2" /> 8 friend
                                     requests
                                     <span className="float-right text-muted text-sm">
@@ -180,7 +180,7 @@ export const Navigation = () => {
                                     </span>
                                 </a>
                                 <div className="dropdown-divider" />
-                                <a href="#" className="dropdown-item">
+                                <a href="/productos" className="dropdown-item">
                                     <i className="fas fa-file mr-2" /> 3 new
                                     reports
                                     <span className="float-right text-muted text-sm">
@@ -189,7 +189,7 @@ export const Navigation = () => {
                                 </a>
                                 <div className="dropdown-divider" />
                                 <a
-                                    href="#"
+                                    href="/productos"
                                     className="dropdown-item dropdown-footer"
                                 >
                                     See All Notifications
@@ -200,7 +200,7 @@ export const Navigation = () => {
                             <a
                                 className="nav-link"
                                 data-widget="fullscreen"
-                                href="#"
+                                href="/productos"
                                 role="button"
                             >
                                 <i className="fas fa-expand-arrows-alt" />
@@ -211,7 +211,7 @@ export const Navigation = () => {
                                 className="nav-link"
                                 data-widget="control-sidebar"
                                 data-slide="true"
-                                href="#"
+                                href="/productos"
                                 role="button"
                             >
                                 <i className="fas fa-th-large" />

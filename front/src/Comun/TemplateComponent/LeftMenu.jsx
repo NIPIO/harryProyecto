@@ -3,7 +3,7 @@ export const LeftMenu = () => {
         <>
             <div>
                 <aside className="main-sidebar sidebar-dark-primary elevation-4">
-                    <a href="index3.html" className="brand-link">
+                    <a href="/productos" className="brand-link">
                         {/* <img
                             src="dist/img/AdminLTELogo.png"
                             alt="AdminLTE Logo"
@@ -24,7 +24,7 @@ export const LeftMenu = () => {
                                 />
                             </div> */}
                             <div className="info">
-                                <a href="#" className="d-block">
+                                <a href="/productos" className="d-block">
                                     Usuario Nombre
                                 </a>
                             </div>
