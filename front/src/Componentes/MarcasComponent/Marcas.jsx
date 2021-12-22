@@ -20,7 +20,7 @@ export const Marcas = ({ match, history }) => {
                 sort: "asc",
             },
             {
-                label: "Stock",
+                label: "Stock total",
                 field: "producto_id",
                 width: 100,
                 sort: "asc",

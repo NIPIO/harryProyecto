@@ -1,4 +1,12 @@
-import { Button, Modal, Form, InputGroup, FormControl } from "react-bootstrap";
+import {
+    Button,
+    Modal,
+    Form,
+    InputGroup,
+    Col,
+    Row,
+    FormControl,
+} from "react-bootstrap";
 
 export const ModalNuevaMarca = ({ show, setModal }) => {
     const handleSubmit = () => {
@@ -7,36 +15,31 @@ export const ModalNuevaMarca = ({ show, setModal }) => {
     return (
         <div>
             <Modal show={show}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                <Modal.Header CerrarButton>
+                    <Modal.Title>Nueva Marca</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group
-                            className="mb-3"
-                            controlId="exampleForm.ControlInput1"
-                        >
-                            <InputGroup className="mb-3">
-                                <InputGroup.Text>$</InputGroup.Text>
-                                <FormControl aria-label="Amount (to the nearest dollar)" />
-                                <InputGroup.Text>.00</InputGroup.Text>
-                            </InputGroup>
-                        </Form.Group>
-                        <Form.Group
-                            className="mb-3"
-                            controlId="exampleForm.ControlTextarea1"
-                        >
-                            <Form.Label>Example textarea</Form.Label>
-                            <Form.Control as="textarea" rows={3} />
-                        </Form.Group>
+                    <Form className="signup-form">
+                        <Row className="mb-3">
+                            <Col md={12} sm={12}>
+                                <Form.Group
+                                    as={Col}
+                                    className="mb-3"
+                                    controlId="formGridAddress1"
+                                >
+                                    <Form.Label>Nombre</Form.Label>
+                                    <Form.Control />
+                                </Form.Group>
+                            </Col>
+                        </Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setModal(false)}>
-                        Close
+                        Cerrar
                     </Button>
                     <Button variant="primary" onClick={() => setModal(false)}>
-                        Save Changes
+                        Cargar
                     </Button>
                 </Modal.Footer>
             </Modal>

@@ -15,7 +15,7 @@ export const CuentaCorriente = ({ match, history }) => {
         columns: [
             {
                 label: "Proveedor",
-                field: "proveedor",
+                field: "proveedor_id",
                 width: 100,
                 sort: "asc",
             },
@@ -52,7 +52,7 @@ export const CuentaCorriente = ({ match, history }) => {
                                     variant="success"
                                     onClick={() => setModal(true)}
                                 >
-                                    Nueva Venta
+                                    Nueva Cta Cte
                                 </Button>
                             </Col>
                         </Row>

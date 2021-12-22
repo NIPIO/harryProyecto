@@ -31,6 +31,12 @@ export const Vendedores = () => {
                 width: 100,
                 sort: "asc",
             },
+            {
+                label: "Comisión General",
+                field: "comision",
+                width: 100,
+                sort: "asc",
+            },
         ],
         rows: vendedores,
     };
@@ -57,7 +63,7 @@ export const Vendedores = () => {
                                     variant="success"
                                     onClick={() => setModal(true)}
                                 >
-                                    Nueva Venta
+                                    Nuevo Vendedor
                                 </Button>
                             </Col>
                         </Row>

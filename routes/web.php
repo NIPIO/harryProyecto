@@ -5,6 +5,7 @@ use App\Http\Controllers\CtaCteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\VendedoresController;
+use App\Http\Controllers\MarcasController;
 use App\Http\Controllers\VentasController;
 
 /*
@@ -25,6 +26,7 @@ Route::get('/', function () {
 Route::prefix('admin')->group(function () {
     Route::get('productos', [ProductosController::class, 'index']);
     Route::get('ventas', [VentasController::class, 'index']);
+    Route::get('marcas', [MarcasController::class, 'index']);
     Route::get('vendedores', [VendedoresController::class, 'index']);
     Route::get('clientes', [ClientesController::class, 'index']);
     Route::get('cuentas-corrientes', [CtaCteController::class, 'index']);
@@ -32,6 +34,12 @@ Route::prefix('admin')->group(function () {
     // Route::get('usuarios/lista', [AdminController::class, 'getAll']);
     // Route::get('usuario/{users_with_trashed}', [AdminController::class, 'show_user'])->middleware(['permiso:Ver info de usuario']);
     // Route::get('rol/{rolID}', [AdminController::class, 'show_rol'])->where('rolID', "\d+")->middleware(['permiso:Ver rol']);
+
+
+
+
+    Route::post('producto', [ProductosController::class, 'nuevoProducto']);
+
 });
 
 

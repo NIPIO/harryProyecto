@@ -10,6 +10,7 @@ import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
 export const Productos = () => {
     let location = useLocation();
     const [productos, setProductos] = useState([]);
+    const [marcas, setMarcas] = useState([]);
     const [modal, setModal] = useState(false);
 
     const data = {
@@ -48,6 +49,15 @@ export const Productos = () => {
         rows: productos,
     };
 
+    const allMarcas = useQuery(["marcas"], () =>
+        api
+            .getMarcas()
+            .then((res) => setMarcas(res.data))
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
     const allProductos = useQuery("productos", () =>
         api
             .getProductos()
@@ -56,6 +66,14 @@ export const Productos = () => {
                 console.log("error", err);
             })
     );
+
+    if (allProductos.isLoading || allMarcas.isLoading) {
+        return (
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden"></span>
+            </Spinner>
+        );
+    }
 
     return (
         <>
@@ -75,35 +93,29 @@ export const Productos = () => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                {allProductos.isLoading ? (
-                                    <Spinner animation="border" role="status">
-                                        <span className="visually-hidden"></span>
-                                    </Spinner>
-                                ) : (
-                                    <MDBDataTable
-                                        scrollX
-                                        width="100px"
-                                        striped
-                                        bordered
-                                        displayEntries={false}
-                                        small
-                                        searchLabel="Buscar"
-                                        sorting={true}
-                                        infoLabel={[
-                                            " ",
-                                            "de",
-                                            "de",
-                                            "registos",
-                                        ]}
-                                        data={data}
-                                    />
-                                )}
+                                <MDBDataTable
+                                    scrollX
+                                    width="100px"
+                                    striped
+                                    bordered
+                                    displayEntries={false}
+                                    small
+                                    searchLabel="Buscar"
+                                    sorting={true}
+                                    infoLabel={[" ", "de", "de", "registos"]}
+                                    data={data}
+                                />
                             </div>
                         </Row>
                     </Container>
                 </div>
 
-                <ModalNuevoProducto show={modal} setModal={() => setModal()} />
+                <ModalNuevoProducto
+                    show={modal}
+                    setModal={() => setModal()}
+                    marcas={marcas}
+                    api={api}
+                />
             </div>
         </>
     );

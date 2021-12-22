@@ -58,7 +58,7 @@ export const Clientes = ({ match, history }) => {
                                     variant="success"
                                     onClick={() => setModal(true)}
                                 >
-                                    Nueva Venta
+                                    Nuevo Cliente
                                 </Button>
                             </Col>
                         </Row>

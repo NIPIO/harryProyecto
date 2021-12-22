@@ -13,7 +13,7 @@ class CtaCteController extends Controller
     }
 
     public function index() {
-        $cuentas = Productos::all();
+        $cuentas = CtaCte::all();
         return response()->json(['status' => 200, 'data' => $cuentas]);
     }
 }

@@ -12,6 +12,9 @@ const api = {
     getProductos: () =>
         client.get(API_PORT + "/admin/productos", {}).then((res) => res.data),
 
+    getMarcas: () =>
+        client.get(API_PORT + "/admin/marcas", {}).then((res) => res.data),
+
     getVendedores: () =>
         client.get(API_PORT + "/admin/vendedores", {}).then((res) => res.data),
 
@@ -25,6 +28,9 @@ const api = {
         client
             .get(API_PORT + "/admin/cuentas-corrientes", {})
             .then((res) => res.data),
+
+    setNuevoProducto: (data) =>
+        client.post(API_PORT + "/admin/producto", data).then((res) => res.data),
 };
 
 export default api;

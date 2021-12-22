@@ -1,7 +1,7 @@
+import { useState } from "react";
 import {
     Button,
     Modal,
-    FloatingLabel,
     Form,
     InputGroup,
     Col,
@@ -9,14 +9,32 @@ import {
     FormControl,
 } from "react-bootstrap";
 
-export const ModalNuevoProducto = ({ show, setModal }) => {
-    const handleSubmit = () => {
-        alert("jacer");
+export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
+    const [nombre, setNombre] = useState("");
+    const [marca, setMarca] = useState(0);
+    const [stock, setStock] = useState(0);
+    const [precio, setPrecio] = useState(null);
+
+    const limpiarDatos = () => {
+        setNombre("");
+        setMarca(null);
+        setStock(0);
+        setPrecio(0);
+        setModal(false);
+    };
+
+    const enviarDatos = () => {
+        api.setNuevoProducto({ nombre, marca, stock, precio })
+            .then((res) => limpiarDatos)
+            .catch((err) => {
+                console.log("error", err);
+            });
+        // .finally(() => setModal(false));
     };
     return (
         <div>
             <Modal show={show}>
-                <Modal.Header closeButton>
+                <Modal.Header CerrarButton>
                     <Modal.Title>Nuevo Producto</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -29,20 +47,30 @@ export const ModalNuevoProducto = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Nombre</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setNombre(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="custom-select">
                                     <Form.Label>Marca</Form.Label>
-                                    <Form.Control as="select">
-                                        {["1", "2", "3", "4", "5"].map(
-                                            (option) => (
-                                                <option key={option}>
-                                                    Option {option}
-                                                </option>
-                                            )
-                                        )}
+                                    <Form.Control
+                                        as="select"
+                                        onClick={(e) =>
+                                            setMarca(e.target.value)
+                                        }
+                                    >
+                                        {marcas.map((marca) => (
+                                            <option
+                                                key={marca.id}
+                                                value={marca.id}
+                                            >
+                                                {marca.nombre}
+                                            </option>
+                                        ))}
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
@@ -55,7 +83,9 @@ export const ModalNuevoProducto = ({ show, setModal }) => {
                                 controlId="formGridAddress1"
                             >
                                 <Form.Label>Stock</Form.Label>
-                                <Form.Control />
+                                <Form.Control
+                                    onChange={(e) => setStock(e.target.value)}
+                                />
                             </Form.Group>
 
                             <Form.Group
@@ -67,18 +97,22 @@ export const ModalNuevoProducto = ({ show, setModal }) => {
 
                                 <InputGroup className="mb-3">
                                     <InputGroup.Text>$</InputGroup.Text>
-                                    <FormControl aria-label="Amount (to the nearest dollar)" />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setPrecio(e.target.value)
+                                        }
+                                    />
                                 </InputGroup>
                             </Form.Group>
                         </Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setModal(false)}>
-                        Close
+                    <Button variant="secondary" onClick={() => limpiarDatos()}>
+                        Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => setModal(false)}>
-                        Save Changes
+                    <Button variant="primary" onClick={() => enviarDatos()}>
+                        Cargar
                     </Button>
                 </Modal.Footer>
             </Modal>
