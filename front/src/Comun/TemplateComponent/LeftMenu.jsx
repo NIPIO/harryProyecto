@@ -50,7 +50,7 @@ export const LeftMenu = () => {
                                 </li>
                                 <li className="nav-item">
                                     <a href="/ventas" className="nav-link">
-                                        <i class=" nav-icon fas fa-dollar-sign"></i>
+                                        <i className=" nav-icon fas fa-dollar-sign"></i>
                                         <p>Ventas</p>
                                     </a>
                                 </li>

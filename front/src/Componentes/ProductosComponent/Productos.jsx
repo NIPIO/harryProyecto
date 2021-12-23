@@ -69,9 +69,20 @@ export const Productos = () => {
 
     if (allProductos.isLoading || allMarcas.isLoading) {
         return (
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden"></span>
-            </Spinner>
+            <div>
+                <div className="content-wrapper">
+                    <CabeceraBody path={location.pathname} />
+                    <Container>
+                        <Row>
+                            <div className="container-fluid text-center">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden"></span>
+                                </Spinner>
+                            </div>
+                        </Row>
+                    </Container>
+                </div>
+            </div>
         );
     }
 
@@ -101,7 +112,6 @@ export const Productos = () => {
                                     displayEntries={false}
                                     small
                                     searchLabel="Buscar"
-                                    sorting={true}
                                     infoLabel={[" ", "de", "de", "registos"]}
                                     data={data}
                                 />

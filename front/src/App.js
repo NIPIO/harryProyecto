@@ -17,25 +17,16 @@ import { SideBar } from "./Comun/TemplateComponent/SideBar";
 // TEMPLATE
 
 import { Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
 
 function App() {
-    const [logueado, setLogueado] = useState(false);
+    const logueado = localStorage.getItem("logueado");
 
     if (!logueado) {
         return (
             <div>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={<Login setLogueado={() => setLogueado()} />}
-                    />
-                    <Route
-                        path="/nuevo-usuario"
-                        element={
-                            <NuevoUsuario setLogueado={() => setLogueado()} />
-                        }
-                    />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/nuevo-usuario" element={<NuevoUsuario />} />
                 </Routes>
             </div>
         );

@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { signin } from "../../api";
 import { Navigate } from "react-router";
 
-export const Login = (setLogueado) => {
+export const Login = () => {
     const [usuario, setUsuario] = useState("");
     const [password, setPassword] = useState("");
 
     const login = () => {
         localStorage.setItem("logueado", { usuario, password });
-        setLogueado(true);
 
         // signin
         //     .postLogin()

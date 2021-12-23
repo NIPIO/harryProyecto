@@ -51,6 +51,25 @@ export const Vendedores = () => {
     );
     let location = useLocation();
 
+    if (allVendedores.isLoading) {
+        return (
+            <div>
+                <div className="content-wrapper">
+                    <CabeceraBody path={location.pathname} />
+                    <Container>
+                        <Row>
+                            <div className="container-fluid text-center">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden"></span>
+                                </Spinner>
+                            </div>
+                        </Row>
+                    </Container>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <div>
@@ -69,29 +88,17 @@ export const Vendedores = () => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                {allVendedores.isLoading ? (
-                                    <Spinner animation="border" role="status">
-                                        <span className="visually-hidden"></span>
-                                    </Spinner>
-                                ) : (
-                                    <MDBDataTable
-                                        scrollX
-                                        width="100px"
-                                        striped
-                                        bordered
-                                        displayEntries={false}
-                                        small
-                                        searchLabel="Buscar"
-                                        sorting={true}
-                                        infoLabel={[
-                                            " ",
-                                            "de",
-                                            "de",
-                                            "registos",
-                                        ]}
-                                        data={data}
-                                    />
-                                )}
+                                <MDBDataTable
+                                    scrollX
+                                    width="100px"
+                                    striped
+                                    bordered
+                                    displayEntries={false}
+                                    small
+                                    searchLabel="Buscar"
+                                    infoLabel={[" ", "de", "de", "registos"]}
+                                    data={data}
+                                />
                             </div>
                         </Row>
                     </Container>

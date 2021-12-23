@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { signin } from "../../api";
 import { Navigate } from "react-router";
 
-export const NuevoUsuario = (setLogueado) => {
-    console.log(setLogueado);
+export const NuevoUsuario = () => {
     const [usuario, setUsuario] = useState("");
     const [password, setPassword] = useState("");
     const [repassword, setRepassword] = useState("");
@@ -15,7 +14,6 @@ export const NuevoUsuario = (setLogueado) => {
         }
 
         localStorage.setItem("logueado", { usuario, password, email });
-        setLogueado(true);
         // signin
         //     .postRegistro()
         //     .then((res) => <Navigate to="/productos" />)
