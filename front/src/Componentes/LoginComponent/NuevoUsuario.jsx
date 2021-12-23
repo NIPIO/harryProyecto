@@ -14,6 +14,7 @@ export const NuevoUsuario = () => {
         }
 
         localStorage.setItem("logueado", { usuario, password, email });
+        window.location.reload();
         // signin
         //     .postRegistro()
         //     .then((res) => <Navigate to="/productos" />)

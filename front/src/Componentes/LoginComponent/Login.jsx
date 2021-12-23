@@ -8,7 +8,7 @@ export const Login = () => {
 
     const login = () => {
         localStorage.setItem("logueado", { usuario, password });
-
+        window.location.reload();
         // signin
         //     .postLogin()
         //     .then((res) => <Navigate to="/productos" />)

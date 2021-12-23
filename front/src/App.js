@@ -25,6 +25,7 @@ function App() {
         return (
             <div>
                 <Routes>
+                    <Route path="*" element={<Login />} />
                     <Route path="/" element={<Login />} />
                     <Route path="/nuevo-usuario" element={<NuevoUsuario />} />
                 </Routes>

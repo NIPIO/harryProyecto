@@ -1,4 +1,8 @@
 export const Navigation = () => {
+    const cerrarSesion = () => {
+        localStorage.removeItem("logueado");
+        window.location.reload();
+    };
     return (
         <>
             <div>
@@ -16,44 +20,7 @@ export const Navigation = () => {
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-auto">
-                        {/* <li className="nav-item">
-                            <a
-                                className="nav-link"
-                                data-widget="navbar-search"
-                                href="/productos"
-                                role="button"
-                            >
-                                <i className="fas fa-search" />
-                            </a>
-                            <div className="navbar-search-block">
-                                <form className="form-inline">
-                                    <div className="input-group input-group-sm">
-                                        <input
-                                            className="form-control form-control-navbar"
-                                            type="search"
-                                            placeholder="Search"
-                                            aria-label="Search"
-                                        />
-                                        <div className="input-group-append">
-                                            <button
-                                                className="btn btn-navbar"
-                                                type="submit"
-                                            >
-                                                <i className="fas fa-search" />
-                                            </button>
-                                            <button
-                                                className="btn btn-navbar"
-                                                type="button"
-                                                data-widget="navbar-search"
-                                            >
-                                                <i className="fas fa-times" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <li className="nav-item dropdown">
+                        {/* <li className="nav-item dropdown">
                             <a
                                 className="nav-link"
                                 data-toggle="dropdown"
@@ -147,31 +114,36 @@ export const Navigation = () => {
                                     See All Messages
                                 </a>
                             </div>
-                        </li>
+                        </li> */}
                         <li className="nav-item dropdown">
-                            <a
-                                className="nav-link"
-                                data-toggle="dropdown"
-                                href="/productos"
-                            >
-                                <i className="far fa-bell" />
-                                <span className="badge badge-warning navbar-badge">
+                            <button data-toggle="dropdown">
+                                <i className="fas fa-th-large" />
+                                {/* <span className="badge badge-warning navbar-badge">
                                     15
-                                </span>
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                <span className="dropdown-item dropdown-header">
+                                </span> */}
+                            </button>
+                            <div
+                                className="dropdown-menu dropdown-menu-lg dropdown-menu-right"
+                                style={{
+                                    marginLeft: "-130px",
+                                    minWidth: "170px",
+                                }}
+                            >
+                                {/* <span className="dropdown-item dropdown-header">
                                     15 Notifications
                                 </span>
-                                <div className="dropdown-divider" />
-                                <a href="/productos" className="dropdown-item">
-                                    <i className="fas fa-envelope mr-2" /> 4 new
-                                    messages
-                                    <span className="float-right text-muted text-sm">
+                                <div className="dropdown-divider" /> */}
+                                <button
+                                    className="dropdown-item"
+                                    onClick={() => cerrarSesion()}
+                                >
+                                    <i className="fas fa-times-circle mr-2" />{" "}
+                                    Cerrar sesión
+                                    {/* <span className="float-right text-muted text-sm">
                                         3 mins
-                                    </span>
-                                </a>
-                                <div className="dropdown-divider" />
+                                    </span> */}
+                                </button>
+                                {/* <div className="dropdown-divider" />
                                 <a href="/productos" className="dropdown-item">
                                     <i className="fas fa-users mr-2" /> 8 friend
                                     requests
@@ -193,20 +165,11 @@ export const Navigation = () => {
                                     className="dropdown-item dropdown-footer"
                                 >
                                     See All Notifications
-                                </a>
+                                </a> */}
                             </div>
-                        </li> */}
+                        </li>
+
                         {/* <li className="nav-item">
-                            <a
-                                className="nav-link"
-                                data-widget="fullscreen"
-                                href="/productos"
-                                role="button"
-                            >
-                                <i className="fas fa-expand-arrows-alt" />
-                            </a>
-                        </li> */}
-                        <li className="nav-item">
                             <a
                                 className="nav-link"
                                 data-widget="control-sidebar"
@@ -216,7 +179,7 @@ export const Navigation = () => {
                             >
                                 <i className="fas fa-th-large" />
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </nav>
             </div>
