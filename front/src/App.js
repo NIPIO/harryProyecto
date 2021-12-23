@@ -5,6 +5,8 @@ import { CuentaCorriente } from "./Componentes/CuentaCorrienteComponent/CuentaCo
 import { Vendedores } from "./Componentes/VendedoresComponent/Vendedores";
 import { Marcas } from "./Componentes/MarcasComponent/Marcas";
 import { Ventas } from "./Componentes/VentasComponent/Ventas";
+import { Login } from "./Componentes/LoginComponent/Login";
+import { NuevoUsuario } from "./Componentes/LoginComponent/NuevoUsuario";
 // COMPONENTES
 
 // TEMPLATE
@@ -15,8 +17,30 @@ import { SideBar } from "./Comun/TemplateComponent/SideBar";
 // TEMPLATE
 
 import { Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function App() {
+    const [logueado, setLogueado] = useState(false);
+
+    if (!logueado) {
+        return (
+            <div>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Login setLogueado={() => setLogueado()} />}
+                    />
+                    <Route
+                        path="/nuevo-usuario"
+                        element={
+                            <NuevoUsuario setLogueado={() => setLogueado()} />
+                        }
+                    />
+                </Routes>
+            </div>
+        );
+    }
+
     return (
         <div>
             <Navigation />

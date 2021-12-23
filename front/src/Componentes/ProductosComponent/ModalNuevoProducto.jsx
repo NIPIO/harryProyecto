@@ -66,7 +66,7 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                                         {marcas.map((marca) => (
                                             <option
                                                 key={marca.id}
-                                                value={marca.id}
+                                                defaultValue={marca.id}
                                             >
                                                 {marca.nombre}
                                             </option>

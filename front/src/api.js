@@ -8,7 +8,7 @@ export const client = axios.create({
 
 const API_PORT = "http://localhost:8000";
 
-const api = {
+export const api = {
     getProductos: () =>
         client.get(API_PORT + "/admin/productos", {}).then((res) => res.data),
 
@@ -33,4 +33,10 @@ const api = {
         client.post(API_PORT + "/admin/producto", data).then((res) => res.data),
 };
 
-export default api;
+export const signin = {
+    postLogin: (data) =>
+        client.post(API_PORT + "/login", { data }).then((res) => res.data),
+
+    postRegistro: (data) =>
+        client.get(API_PORT + "/sign-up", { data }).then((res) => res.data),
+};

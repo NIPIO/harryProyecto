@@ -1,4 +1,4 @@
-import api from "../../api";
+import { api } from "../../api";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
