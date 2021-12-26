@@ -6,15 +6,46 @@ import {
     Col,
     Row,
     FormControl,
+    Alert,
 } from "react-bootstrap";
+import { useState } from "react";
+
 export const ModalNuevoCliente = ({ show, setModal }) => {
-    const handleSubmit = () => {
-        alert("jacer");
+    const [nombre, setNombre] = useState(null);
+    const [telefono, setTelefono] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [error, setError] = useState(false);
+
+    const limpiarDatos = () => {
+        setNombre(null);
+        setTelefono(null);
+        setEmail(null);
+        setModal(false);
     };
+
+    const enviarDatos = () => {
+        setError(false);
+        validar([nombre, telefono, email]);
+        if (!error) {
+            // api.setNuevoProducto({ nombre, marca, stock, precio })
+            //     .then((res) => limpiarDatos)
+            //     .catch((err) => {
+            //         console.log("error", err);
+            //     });
+            // .finally(() => setModal(false));
+        }
+    };
+
+    const validar = ([...args]) => {
+        args.map((arg) => {
+            if (arg === null) setError(true);
+        });
+    };
+
     return (
         <div>
             <Modal show={show}>
-                <Modal.Header CerrarButton>
+                <Modal.Header>
                     <Modal.Title>Nuevo Cliente</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -27,7 +58,11 @@ export const ModalNuevoCliente = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Nombre</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setNombre(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
@@ -37,7 +72,11 @@ export const ModalNuevoCliente = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Telefono</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setTelefono(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -50,20 +89,29 @@ export const ModalNuevoCliente = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setModal(false)}>
+                    <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => setModal(false)}>
+                    <Button variant="primary" onClick={() => enviarDatos()}>
                         Cargar
                     </Button>
                 </Modal.Footer>
+                {error && (
+                    <Alert variant="warning" style={{ textAlign: "center" }}>
+                        Faltan completar campos
+                    </Alert>
+                )}
             </Modal>
         </div>
     );

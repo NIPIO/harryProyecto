@@ -27,6 +27,11 @@ class CtaCte extends Model
      */
     protected $fillable = ['proveedor_id', 'saldo'];
 
+    
+    protected $casts = [
+        'created_at'  => 'datetime:d-m-Y',
+        'updated_at'  => 'datetime:d-m-Y',
+    ];
     /**
      * Indicates if the model should be timestamped.
      *

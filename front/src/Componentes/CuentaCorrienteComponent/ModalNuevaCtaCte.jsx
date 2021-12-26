@@ -6,16 +6,44 @@ import {
     Col,
     Row,
     FormControl,
+    Alert,
 } from "react-bootstrap";
+import { useState } from "react";
 
 export const ModalNuevaCtaCte = ({ show, setModal }) => {
-    const handleSubmit = () => {
-        alert("jacer");
+    const [nombre, setNombre] = useState(null);
+    const [saldo, setSaldo] = useState(null);
+    const [error, setError] = useState(false);
+
+    const limpiarDatos = () => {
+        setNombre(null);
+        setSaldo(null);
+        setModal(false);
     };
+
+    const enviarDatos = () => {
+        setError(false);
+        validar([nombre, saldo]);
+        if (!error) {
+            // api.setNuevoProducto({ nombre, marca, stock, precio })
+            //     .then((res) => limpiarDatos)
+            //     .catch((err) => {
+            //         console.log("error", err);
+            //     });
+            // .finally(() => setModal(false));
+        }
+    };
+
+    const validar = ([...args]) => {
+        args.map((arg) => {
+            if (arg === null) setError(true);
+        });
+    };
+
     return (
         <div>
             <Modal show={show}>
-                <Modal.Header CerrarButton>
+                <Modal.Header>
                     <Modal.Title>Nueva Cte Cte</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -28,7 +56,11 @@ export const ModalNuevaCtaCte = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Proveedor</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setNombre(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
@@ -41,7 +73,12 @@ export const ModalNuevaCtaCte = ({ show, setModal }) => {
 
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text>$</InputGroup.Text>
-                                        <FormControl aria-label="Amount (to the nearest dollar)" />
+                                        <FormControl
+                                            onChange={(e) =>
+                                                setSaldo(e.target.value)
+                                            }
+                                            aria-label="Amount (to the nearest dollar)"
+                                        />
                                     </InputGroup>
                                 </Form.Group>
                             </Col>
@@ -49,13 +86,20 @@ export const ModalNuevaCtaCte = ({ show, setModal }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setModal(false)}>
+                    <Button variant="secondary" onClick={() => limpiarDatos()}>
+                        {" "}
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => setModal(false)}>
+                    <Button variant="primary" onClick={() => enviarDatos()}>
+                        {" "}
                         Cargar
                     </Button>
                 </Modal.Footer>
+                {error && (
+                    <Alert variant="warning" style={{ textAlign: "center" }}>
+                        Faltan completar campos
+                    </Alert>
+                )}
             </Modal>
         </div>
     );

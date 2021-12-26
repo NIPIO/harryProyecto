@@ -8,37 +8,41 @@ import { ModalNuevaMarca } from "./ModalNuevaMarca";
 import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
 
 export const Marcas = ({ match, history }) => {
-    const [ventas, setVentas] = useState([]);
+    const [marcas, setMarcas] = useState([]);
     const [modal, setModal] = useState(false);
 
     const data = {
         columns: [
             {
                 label: "Marcas",
-                field: "cliente_id",
+                field: "nombre",
                 width: 100,
+                name: "nombre",
+
                 sort: "asc",
             },
             {
                 label: "Stock total",
-                field: "producto_id",
+                field: "id",
+                name: "id",
                 width: 100,
                 sort: "asc",
             },
-            {
-                label: "En transito",
-                field: "producto_id",
-                width: 100,
-                sort: "asc",
-            },
+            // {
+            //     label: "En transito",
+            //     field: "nombre",
+            //     name: "nombre",
+            //     width: 100,
+            //     sort: "asc",
+            // },
         ],
-        rows: ventas,
+        rows: marcas,
     };
 
-    const allVentas = useQuery("ventar", () =>
+    const allMarcas = useQuery("marcas", () =>
         api
-            .getVentas()
-            .then((res) => setVentas(res.data))
+            .getMarcas()
+            .then((res) => setMarcas(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
@@ -46,7 +50,7 @@ export const Marcas = ({ match, history }) => {
 
     let location = useLocation();
 
-    if (allVentas.isLoading) {
+    if (allMarcas.isLoading) {
         return (
             <div>
                 <div className="content-wrapper">

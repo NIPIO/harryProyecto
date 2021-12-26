@@ -27,6 +27,11 @@ class Ventas extends Model
      */
     protected $fillable = ['cliente_id', 'producto_id', 'cantidad', 'precio_unidad', 'precio_total', 'vendedor_id', 'vendedor_comision', 'created_at', 'updated_at'];
 
+    protected $casts = [
+        'created_at'  => 'datetime:d-m-Y',
+        'updated_at'  => 'datetime:d-m-Y',
+    ];
+
     /**
      * Indicates if the model should be timestamped.
      *

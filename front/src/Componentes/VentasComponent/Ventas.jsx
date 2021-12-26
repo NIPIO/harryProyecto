@@ -121,7 +121,11 @@ export const Ventas = ({ match, history }) => {
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevaVenta show={modal} setModal={() => setModal()} />
+                <ModalNuevaVenta
+                    show={modal}
+                    location={location}
+                    setModal={() => setModal()}
+                />
             </div>
         </>
     );

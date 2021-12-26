@@ -6,16 +6,115 @@ import {
     Col,
     Row,
     FormControl,
+    Alert,
 } from "react-bootstrap";
 
-export const ModalNuevaVenta = ({ show, setModal }) => {
-    const handleSubmit = () => {
-        alert("jacer");
+import { useState } from "react";
+import { api } from "../../api";
+import { useQuery } from "react-query";
+import { CabeceraBody } from "../../Comun/CabeceraBody";
+import { Spinner, Container } from "react-bootstrap";
+
+export const ModalNuevaVenta = ({ show, setModal, location }) => {
+    const [cliente, setCliente] = useState(null);
+    const [producto, setProducto] = useState(null);
+    const [vendedor, setVendedor] = useState(null);
+    const [cantidad, setCantidad] = useState(null);
+    const [precioUnitario, setPrecioUnitario] = useState(null);
+    const [precioTotal, setprecioTotal] = useState(null);
+    const [error, setError] = useState(false);
+
+    const allClientes = useQuery("clientes", () =>
+        api
+            .getClientes()
+            .then((res) => res.data)
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
+    const allProductos = useQuery("productos", () =>
+        api
+            .getProductos()
+            .then((res) => res.data)
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
+    const allVendedores = useQuery("vendedores", () =>
+        api
+            .getVendedores()
+            .then((res) => res.data)
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
+    const limpiarDatos = () => {
+        setCliente(null);
+        setProducto(null);
+        setVendedor(null);
+        setCantidad(null);
+        setPrecioUnitario(null);
+        setprecioTotal(null);
+        setError(false);
+        setModal(false);
     };
+
+    const enviarDatos = () => {
+        setError(false);
+        validar([
+            cliente,
+            producto,
+            vendedor,
+            cantidad,
+            precioUnitario,
+            precioTotal,
+        ]);
+        if (!error) {
+            // api.setNuevoProducto({ nombre, marca, stock, precio })
+            //     .then((res) => limpiarDatos)
+            //     .catch((err) => {
+            //         console.log("error", err);
+            //     });
+            // .finally(() => setModal(false));
+        }
+    };
+
+    const validar = ([...args]) => {
+        args.map((arg) => {
+            if (arg === null) setError(true);
+        });
+    };
+
+    if (
+        allClientes.isLoading ||
+        allProductos.isLoading ||
+        allVendedores.isLoading
+    ) {
+        return (
+            <div>
+                <div className="content-wrapper">
+                    <CabeceraBody path={location.pathname} />
+                    <Container>
+                        <Row>
+                            <div className="container-fluid text-center">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden"></span>
+                                </Spinner>
+                            </div>
+                        </Row>
+                    </Container>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div>
             <Modal show={show}>
-                <Modal.Header CerrarButton>
+                <Modal.Header>
                     <Modal.Title>Nueva Venta</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -28,28 +127,36 @@ export const ModalNuevaVenta = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Cliente</Form.Label>
-                                    <Form.Control as="select">
-                                        {["1", "2", "3", "4", "5"].map(
-                                            (option) => (
-                                                <option key={option}>
-                                                    Option {option}
-                                                </option>
-                                            )
-                                        )}
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setCliente(e.target.value)
+                                        }
+                                        as="select"
+                                    >
+                                        <option value="">Seleccioná</option>
+                                        {allClientes.data.map((cliente) => (
+                                            <option key={cliente.id}>
+                                                {cliente.nombre}
+                                            </option>
+                                        ))}
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="custom-select">
                                     <Form.Label>Producto</Form.Label>
-                                    <Form.Control as="select">
-                                        {["1", "2", "3", "4", "5"].map(
-                                            (option) => (
-                                                <option key={option}>
-                                                    Option {option}
-                                                </option>
-                                            )
-                                        )}
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setProducto(e.target.value)
+                                        }
+                                        as="select"
+                                    >
+                                        <option value="">Seleccioná</option>
+                                        {allProductos.data.map((producto) => (
+                                            <option key={producto.id}>
+                                                {producto.nombre}
+                                            </option>
+                                        ))}
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
@@ -63,14 +170,18 @@ export const ModalNuevaVenta = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Vendedor</Form.Label>
-                                    <Form.Control as="select">
-                                        {["1", "2", "3", "4", "5"].map(
-                                            (option) => (
-                                                <option key={option}>
-                                                    Option {option}
-                                                </option>
-                                            )
-                                        )}
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setVendedor(e.target.value)
+                                        }
+                                        as="select"
+                                    >
+                                        <option value="">Seleccioná</option>
+                                        {allVendedores.data.map((vendedor) => (
+                                            <option key={vendedor.id}>
+                                                {vendedor.nombre}
+                                            </option>
+                                        ))}
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
@@ -81,7 +192,11 @@ export const ModalNuevaVenta = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Cantidad</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setCantidad(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -96,7 +211,14 @@ export const ModalNuevaVenta = ({ show, setModal }) => {
                                     <Form.Label>Precio U.</Form.Label>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text>$</InputGroup.Text>
-                                        <FormControl aria-label="Amount (to the nearest dollar)" />
+                                        <FormControl
+                                            onChange={(e) =>
+                                                setPrecioUnitario(
+                                                    e.target.value
+                                                )
+                                            }
+                                            aria-label="Amount (to the nearest dollar)"
+                                        />
                                     </InputGroup>
                                 </Form.Group>
                             </Col>
@@ -109,7 +231,12 @@ export const ModalNuevaVenta = ({ show, setModal }) => {
                                     <Form.Label>Total</Form.Label>
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text>$</InputGroup.Text>
-                                        <FormControl aria-label="Amount (to the nearest dollar)" />
+                                        <FormControl
+                                            onChange={(e) =>
+                                                setprecioTotal(e.target.value)
+                                            }
+                                            aria-label="Amount (to the nearest dollar)"
+                                        />
                                     </InputGroup>
                                 </Form.Group>
                             </Col>
@@ -117,13 +244,18 @@ export const ModalNuevaVenta = ({ show, setModal }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setModal(false)}>
+                    <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => setModal(false)}>
+                    <Button variant="primary" onClick={() => enviarDatos()}>
                         Cargar
                     </Button>
                 </Modal.Footer>
+                {error && (
+                    <Alert variant="warning" style={{ textAlign: "center" }}>
+                        Faltan completar campos
+                    </Alert>
+                )}
             </Modal>
         </div>
     );
