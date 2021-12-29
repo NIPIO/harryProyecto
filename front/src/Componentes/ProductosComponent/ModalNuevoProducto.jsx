@@ -9,6 +9,7 @@ import {
     FormControl,
     Alert,
 } from "react-bootstrap";
+
 export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
     const [nombre, setNombre] = useState(null);
     const [marca, setMarca] = useState(null);
@@ -28,11 +29,11 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
         setError(false);
         validar([nombre, marca, stock, precio]);
         if (!error) {
-            // api.setNuevoProducto({ nombre, marca, stock, precio })
-            //     .then((res) => limpiarDatos)
-            //     .catch((err) => {
-            //         console.log("error", err);
-            //     });
+            api.setNuevoProducto({ nombre, marca, stock, precio })
+                .then((res) => limpiarDatos)
+                .catch((err) => {
+                    console.log("error", err);
+                });
             // .finally(() => setModal(false));
         }
     };
