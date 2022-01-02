@@ -19,18 +19,16 @@ class ProductosController extends Controller
 
 
     public function nuevoProducto(Request $request) {
-dd($request);
+
+        $req = $request->all();
+
         $producto = new Productos();
-        // $plantilla->plaFecReg = now()->toDateTimeString();
-        // $plantilla->plaNombre = $request['plaNombre'];
-        // $plantilla->plaDescripcion = $request['plaDescripcion'];
-        // $plantilla->orgID = $request['orgID'];
-        // $plantilla->comID = $request['comID'];
-        // $plantilla->fplID = $request['fplID'];
-        // $plantilla->splID = $request['splID'] ?? null;
-        // $plantilla->save();
+        $producto->nombre = $req['nombre'];
+        $producto->marca = $req['marca'];
+        $producto->precio = $req['precio'];
+        $producto->stock= $req['stock'];
+        $producto->save();
 
-
-        return response()->json(['status' => 200, 'data' => $productos]);
+        return response()->json(['status' => 200]);
     }
 }

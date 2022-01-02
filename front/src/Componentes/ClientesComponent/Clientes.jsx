@@ -98,7 +98,11 @@ export const Clientes = ({ match, history }) => {
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevoCliente show={modal} setModal={() => setModal()} />
+                <ModalNuevoCliente
+                    show={modal}
+                    setModal={() => setModal()}
+                    api={api}
+                />
             </div>
         </>
     );

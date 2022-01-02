@@ -1,16 +1,7 @@
-import {
-    Button,
-    Modal,
-    Form,
-    InputGroup,
-    Col,
-    Row,
-    FormControl,
-    Alert,
-} from "react-bootstrap";
+import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
 import { useState } from "react";
 
-export const ModalNuevaMarca = ({ show, setModal }) => {
+export const ModalNuevaMarca = ({ show, setModal, api }) => {
     const [nombre, setNombre] = useState(null);
     const [error, setError] = useState(false);
 
@@ -23,12 +14,12 @@ export const ModalNuevaMarca = ({ show, setModal }) => {
         setError(false);
         validar(nombre);
         if (!error) {
-            // api.setNuevoProducto({ nombre, marca, stock, precio })
-            //     .then((res) => limpiarDatos)
-            //     .catch((err) => {
-            //         console.log("error", err);
-            //     });
-            // .finally(() => setModal(false));
+            api.setNuevaMarca({ nombre })
+                .then((res) => limpiarDatos)
+                .catch((err) => {
+                    console.log("error", err);
+                })
+                .finally(() => setModal(false));
         }
     };
 
@@ -52,7 +43,11 @@ export const ModalNuevaMarca = ({ show, setModal }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Nombre</Form.Label>
-                                    <Form.Control />
+                                    <Form.Control
+                                        onChange={(e) =>
+                                            setNombre(e.target.value)
+                                        }
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>

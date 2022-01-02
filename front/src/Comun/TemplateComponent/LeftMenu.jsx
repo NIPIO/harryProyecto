@@ -60,7 +60,12 @@ export const LeftMenu = () => {
                                         <p>Clientes</p>
                                     </a>
                                 </li>
-
+                                <li className="nav-item">
+                                    <a href="/proveedores" className="nav-link">
+                                        <i className="nav-icon fas fa-university" />
+                                        <p>Proveedores</p>
+                                    </a>
+                                </li>
                                 <li className="nav-item">
                                     <a
                                         href="/cuenta-corriente"

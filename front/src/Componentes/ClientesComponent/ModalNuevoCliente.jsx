@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 
-export const ModalNuevoCliente = ({ show, setModal }) => {
+export const ModalNuevoCliente = ({ show, setModal, api }) => {
     const [nombre, setNombre] = useState(null);
     const [telefono, setTelefono] = useState(null);
     const [email, setEmail] = useState(null);
@@ -27,12 +27,12 @@ export const ModalNuevoCliente = ({ show, setModal }) => {
         setError(false);
         validar([nombre, telefono, email]);
         if (!error) {
-            // api.setNuevoProducto({ nombre, marca, stock, precio })
-            //     .then((res) => limpiarDatos)
-            //     .catch((err) => {
-            //         console.log("error", err);
-            //     });
-            // .finally(() => setModal(false));
+            api.setNuevoCliente({ nombre, telefono, email })
+                .then((res) => limpiarDatos)
+                .catch((err) => {
+                    console.log("error", err);
+                })
+                .finally(() => setModal(false));
         }
     };
 

@@ -4,9 +4,11 @@ import { Clientes } from "./Componentes/ClientesComponent/Clientes";
 import { CuentaCorriente } from "./Componentes/CuentaCorrienteComponent/CuentaCorriente";
 import { Vendedores } from "./Componentes/VendedoresComponent/Vendedores";
 import { Marcas } from "./Componentes/MarcasComponent/Marcas";
+import { Proveedores } from "./Componentes/ProveedoresComponent/Proveedores";
 import { Ventas } from "./Componentes/VentasComponent/Ventas";
 import { Login } from "./Componentes/LoginComponent/Login";
 import { NuevoUsuario } from "./Componentes/LoginComponent/NuevoUsuario";
+
 // COMPONENTES
 
 // TEMPLATE
@@ -45,6 +47,7 @@ function App() {
                     <Route path="/ventas" element={<Ventas />} />
                     <Route path="/clientes" element={<Clientes />} />
                     <Route path="/marcas" element={<Marcas />} />
+                    <Route path="/proveedores" element={<Proveedores />} />
 
                     <Route
                         path="/cuenta-corriente"

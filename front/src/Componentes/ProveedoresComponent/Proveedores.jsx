@@ -4,11 +4,11 @@ import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { MDBDataTable } from "mdbreact";
-import { ModalNuevoVendedor } from "./ModalNuevoVendedor";
+import { ModalNuevoProveedor } from "./ModalNuevoProveedor";
 import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
 
-export const Vendedores = () => {
-    const [vendedores, setVendedores] = useState([]);
+export const Proveedores = () => {
+    const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
 
     const data = {
@@ -20,38 +20,32 @@ export const Vendedores = () => {
                 sort: "asc",
             },
             {
-                label: "Email",
-                field: "email",
+                label: "Creado",
+                field: "created_at",
                 width: 100,
                 sort: "asc",
             },
             {
-                label: "Telefono",
-                field: "telefono",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Comisión General",
-                field: "comision",
+                label: "Modificado",
+                field: "updated_at",
                 width: 100,
                 sort: "asc",
             },
         ],
-        rows: vendedores,
+        rows: proveedores,
     };
 
-    const allVendedores = useQuery("vendedores", () =>
+    const allProveedores = useQuery("proveedores", () =>
         api
-            .getVendedores()
-            .then((res) => setVendedores(res.data))
+            .getProveedores()
+            .then((res) => setProveedores(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
     );
     let location = useLocation();
 
-    if (allVendedores.isLoading) {
+    if (allProveedores.isLoading) {
         return (
             <div>
                 <div className="content-wrapper">
@@ -82,7 +76,7 @@ export const Vendedores = () => {
                                     variant="success"
                                     onClick={() => setModal(true)}
                                 >
-                                    Nuevo Vendedor
+                                    Nuevo Proveedor
                                 </Button>
                             </Col>
                         </Row>
@@ -103,7 +97,7 @@ export const Vendedores = () => {
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevoVendedor
+                <ModalNuevoProveedor
                     show={modal}
                     setModal={() => setModal()}
                     api={api}

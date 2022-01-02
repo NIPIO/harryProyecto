@@ -125,6 +125,7 @@ export const Ventas = ({ match, history }) => {
                     show={modal}
                     location={location}
                     setModal={() => setModal()}
+                    api={api}
                 />
             </div>
         </>

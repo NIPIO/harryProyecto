@@ -16,4 +16,19 @@ class CtaCteController extends Controller
         $cuentas = CtaCte::all();
         return response()->json(['status' => 200, 'data' => $cuentas]);
     }
+
+
+    
+    public function nuevaCtaCte(Request $request) {
+
+        $req = $request->all();
+        $venta = new CtaCte();
+        $venta->proveedor_id = $req['nombre'];
+        $venta->saldo = $req['saldo'];
+        $venta->save();
+
+        return response()->json(['status' => 200]);
+    }
+
+    
 }

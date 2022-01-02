@@ -15,4 +15,19 @@ class ClientesController extends Controller
         $clientes = Clientes::all();
         return response()->json(['status' => 200, 'data' => $clientes]);
     }
+
+
+    
+    public function nuevoCliente(Request $request) {
+
+        $req = $request->all();
+
+        $marca = new Clientes();
+        $marca->nombre = $req['nombre'];
+        $marca->telefono = $req['telefono'];
+        $marca->email = $req['email'];
+        $marca->save();
+
+        return response()->json(['status' => 200]);
+    }
 }

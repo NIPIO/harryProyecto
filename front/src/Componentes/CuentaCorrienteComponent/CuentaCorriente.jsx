@@ -9,6 +9,7 @@ import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
 
 export const CuentaCorriente = ({ match, history }) => {
     const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
+    const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
 
     const data = {
@@ -38,9 +39,18 @@ export const CuentaCorriente = ({ match, history }) => {
             })
     );
 
+    const allProveedores = useQuery("proveedores", () =>
+        api
+            .getProveedores()
+            .then((res) => setProveedores(res.data))
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
     let location = useLocation();
 
-    if (allCuentasCorrientes.isLoading) {
+    if (allCuentasCorrientes.isLoading || allProveedores.isLoading) {
         return (
             <div>
                 <div className="content-wrapper">
@@ -92,7 +102,12 @@ export const CuentaCorriente = ({ match, history }) => {
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevaCtaCte show={modal} setModal={() => setModal()} />
+                <ModalNuevaCtaCte
+                    show={modal}
+                    setModal={() => setModal()}
+                    api={api}
+                    proveedores={proveedores}
+                />
             </div>
         </>
     );

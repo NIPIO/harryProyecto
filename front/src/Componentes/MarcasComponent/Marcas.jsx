@@ -102,7 +102,11 @@ export const Marcas = ({ match, history }) => {
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevaMarca show={modal} setModal={() => setModal()} />
+                <ModalNuevaMarca
+                    show={modal}
+                    setModal={() => setModal()}
+                    api={api}
+                />
             </div>
         </>
     );

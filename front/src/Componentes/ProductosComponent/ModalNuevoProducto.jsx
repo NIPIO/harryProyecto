@@ -33,8 +33,8 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                 .then((res) => limpiarDatos)
                 .catch((err) => {
                     console.log("error", err);
-                });
-            // .finally(() => setModal(false));
+                })
+                .finally(() => setModal(false));
         }
     };
 
@@ -72,7 +72,7 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                                     <Form.Control
                                         as="select"
                                         onChange={(e) =>
-                                            setMarca(e.target.value)
+                                            setMarca(e.target.selectedIndex)
                                         }
                                     >
                                         <option value="">Seleccioná</option>

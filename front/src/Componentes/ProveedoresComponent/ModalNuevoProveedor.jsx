@@ -10,29 +10,25 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 
-export const ModalNuevoVendedor = ({ show, setModal, api }) => {
+export const ModalNuevoProveedor = ({ show, setModal, api }) => {
     const [nombre, setNombre] = useState(null);
-    const [telefono, setTelefono] = useState(null);
-    const [email, setEmail] = useState(null);
     const [error, setError] = useState(false);
 
     const limpiarDatos = () => {
         setNombre(null);
-        setTelefono(null);
-        setEmail(null);
         setModal(false);
     };
 
     const enviarDatos = () => {
         setError(false);
-        validar([nombre, telefono, email]);
+        validar([nombre]);
         if (!error) {
-            api.setNuevoVendedor({ nombre, telefono, email })
+            api.setNuevoProveedor({ nombre })
                 .then((res) => limpiarDatos)
                 .catch((err) => {
                     console.log("error", err);
-                })
-                .finally(() => setModal(false));
+                });
+            // .finally(() => setModal(false));
         }
     };
 
@@ -61,37 +57,6 @@ export const ModalNuevoVendedor = ({ show, setModal, api }) => {
                                     <Form.Control
                                         onChange={(e) =>
                                             setNombre(e.target.value)
-                                        }
-                                    />
-                                </Form.Group>
-                            </Col>
-                            <Col md={6} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
-                                    <Form.Label>Telefono</Form.Label>
-                                    <Form.Control
-                                        onChange={(e) =>
-                                            setTelefono(e.target.value)
-                                        }
-                                    />
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <Row className="mb-3">
-                            <Col md={12} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
                                         }
                                     />
                                 </Form.Group>

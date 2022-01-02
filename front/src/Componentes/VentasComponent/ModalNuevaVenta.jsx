@@ -10,18 +10,19 @@ import {
 } from "react-bootstrap";
 
 import { useState } from "react";
-import { api } from "../../api";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { Spinner, Container } from "react-bootstrap";
 
-export const ModalNuevaVenta = ({ show, setModal, location }) => {
+export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
     const [cliente, setCliente] = useState(null);
     const [producto, setProducto] = useState(null);
     const [vendedor, setVendedor] = useState(null);
     const [cantidad, setCantidad] = useState(null);
     const [precioUnitario, setPrecioUnitario] = useState(null);
-    const [precioTotal, setprecioTotal] = useState(null);
+    const [precioTotal, setPrecioTotal] = useState(null);
+    const [vendedorComision, setVendedorComision] = useState(null);
+
     const [error, setError] = useState(false);
 
     const allClientes = useQuery("clientes", () =>
@@ -57,7 +58,8 @@ export const ModalNuevaVenta = ({ show, setModal, location }) => {
         setVendedor(null);
         setCantidad(null);
         setPrecioUnitario(null);
-        setprecioTotal(null);
+        setPrecioTotal(null);
+        setVendedorComision(null);
         setError(false);
         setModal(false);
     };
@@ -71,14 +73,23 @@ export const ModalNuevaVenta = ({ show, setModal, location }) => {
             cantidad,
             precioUnitario,
             precioTotal,
+            vendedorComision,
         ]);
         if (!error) {
-            // api.setNuevoProducto({ nombre, marca, stock, precio })
-            //     .then((res) => limpiarDatos)
-            //     .catch((err) => {
-            //         console.log("error", err);
-            //     });
-            // .finally(() => setModal(false));
+            api.setNuevaVenta({
+                cliente,
+                producto,
+                vendedor,
+                cantidad,
+                precioUnitario,
+                precioTotal,
+                vendedorComision,
+            })
+                .then((res) => limpiarDatos)
+                .catch((err) => {
+                    console.log("error", err);
+                })
+                .finally(() => setModal(false));
         }
     };
 
@@ -129,7 +140,7 @@ export const ModalNuevaVenta = ({ show, setModal, location }) => {
                                     <Form.Label>Cliente</Form.Label>
                                     <Form.Control
                                         onChange={(e) =>
-                                            setCliente(e.target.value)
+                                            setCliente(e.target.selectedIndex)
                                         }
                                         as="select"
                                     >
@@ -147,7 +158,7 @@ export const ModalNuevaVenta = ({ show, setModal, location }) => {
                                     <Form.Label>Producto</Form.Label>
                                     <Form.Control
                                         onChange={(e) =>
-                                            setProducto(e.target.value)
+                                            setProducto(e.target.selectedIndex)
                                         }
                                         as="select"
                                     >
@@ -172,7 +183,7 @@ export const ModalNuevaVenta = ({ show, setModal, location }) => {
                                     <Form.Label>Vendedor</Form.Label>
                                     <Form.Control
                                         onChange={(e) =>
-                                            setVendedor(e.target.value)
+                                            setVendedor(e.target.selectedIndex)
                                         }
                                         as="select"
                                     >
@@ -233,7 +244,27 @@ export const ModalNuevaVenta = ({ show, setModal, location }) => {
                                         <InputGroup.Text>$</InputGroup.Text>
                                         <FormControl
                                             onChange={(e) =>
-                                                setprecioTotal(e.target.value)
+                                                setPrecioTotal(e.target.value)
+                                            }
+                                            aria-label="Amount (to the nearest dollar)"
+                                        />
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                            <Col md={6} sm={12}>
+                                <Form.Group
+                                    as={Col}
+                                    className="mb-3"
+                                    controlId="formGridAddress1"
+                                >
+                                    <Form.Label>Vendedor Comisión</Form.Label>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>$</InputGroup.Text>
+                                        <FormControl
+                                            onChange={(e) =>
+                                                setVendedorComision(
+                                                    e.target.value
+                                                )
                                             }
                                             aria-label="Amount (to the nearest dollar)"
                                         />

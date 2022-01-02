@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 
-export const ModalNuevaCtaCte = ({ show, setModal }) => {
+export const ModalNuevaCtaCte = ({ show, setModal, api, proveedores }) => {
     const [nombre, setNombre] = useState(null);
     const [saldo, setSaldo] = useState(null);
     const [error, setError] = useState(false);
@@ -25,12 +25,12 @@ export const ModalNuevaCtaCte = ({ show, setModal }) => {
         setError(false);
         validar([nombre, saldo]);
         if (!error) {
-            // api.setNuevoProducto({ nombre, marca, stock, precio })
-            //     .then((res) => limpiarDatos)
-            //     .catch((err) => {
-            //         console.log("error", err);
-            //     });
-            // .finally(() => setModal(false));
+            api.setNuevaCtaCte({ nombre, saldo })
+                .then((res) => limpiarDatos)
+                .catch((err) => {
+                    console.log("error", err);
+                })
+                .finally(() => setModal(false));
         }
     };
 
@@ -50,17 +50,24 @@ export const ModalNuevaCtaCte = ({ show, setModal }) => {
                     <Form className="signup-form">
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
+                                <Form.Group controlId="custom-select">
                                     <Form.Label>Proveedor</Form.Label>
                                     <Form.Control
+                                        as="select"
                                         onChange={(e) =>
-                                            setNombre(e.target.value)
+                                            setNombre(e.target.selectedIndex)
                                         }
-                                    />
+                                    >
+                                        <option value="">Seleccioná</option>
+                                        {proveedores.map((proveedores) => (
+                                            <option
+                                                key={proveedores.id}
+                                                defaultValue={proveedores.id}
+                                            >
+                                                {proveedores.nombre}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
