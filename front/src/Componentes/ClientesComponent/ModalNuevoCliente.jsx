@@ -103,7 +103,7 @@ export const ModalNuevoCliente = ({ show, setModal, api }) => {
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => enviarDatos()}>
+                    <Button variant="success" onClick={() => enviarDatos()}>
                         Cargar
                     </Button>
                 </Modal.Footer>

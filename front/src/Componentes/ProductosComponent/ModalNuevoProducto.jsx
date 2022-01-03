@@ -124,7 +124,7 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => enviarDatos()}>
+                    <Button variant="success" onClick={() => enviarDatos()}>
                         Cargar
                     </Button>
                 </Modal.Footer>

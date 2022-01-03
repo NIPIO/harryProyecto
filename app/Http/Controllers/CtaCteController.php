@@ -13,7 +13,7 @@ class CtaCteController extends Controller
     }
 
     public function index() {
-        $cuentas = CtaCte::all();
+        $cuentas = CtaCte::with('proveedor')->get();
         return response()->json(['status' => 200, 'data' => $cuentas]);
     }
 

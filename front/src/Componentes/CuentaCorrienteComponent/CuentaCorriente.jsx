@@ -16,13 +16,19 @@ export const CuentaCorriente = ({ match, history }) => {
         columns: [
             {
                 label: "Proveedor",
-                field: "proveedor_id",
+                field: "proveedor.nombre",
                 width: 100,
                 sort: "asc",
             },
             {
                 label: "Saldo",
                 field: "saldo",
+                width: 100,
+                sort: "asc",
+            },
+            {
+                label: "Ultima Mod.",
+                field: "updated_at",
                 width: 100,
                 sort: "asc",
             },

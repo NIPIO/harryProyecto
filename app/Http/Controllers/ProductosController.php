@@ -13,7 +13,8 @@ class ProductosController extends Controller
     }
 
     public function index() {
-        $productos = Productos::all();
+        $productos = Productos::with('marcas')->get();
+
         return response()->json(['status' => 200, 'data' => $productos]);
     }
 

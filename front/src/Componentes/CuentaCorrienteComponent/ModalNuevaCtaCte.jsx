@@ -97,7 +97,7 @@ export const ModalNuevaCtaCte = ({ show, setModal, api, proveedores }) => {
                         {" "}
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={() => enviarDatos()}>
+                    <Button variant="success" onClick={() => enviarDatos()}>
                         {" "}
                         Cargar
                     </Button>

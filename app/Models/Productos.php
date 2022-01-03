@@ -42,4 +42,10 @@ class Productos extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    public function marcas()
+    {
+        return $this->belongsTo(Marcas::class, 'marca', 'id');
+    }
+
+
 }
