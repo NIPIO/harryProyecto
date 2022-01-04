@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     Modal,
@@ -18,34 +18,46 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
     const [error, setError] = useState(false);
 
     const limpiarDatos = () => {
-        setNombre("");
+        setNombre(null);
         setMarca(null);
-        setStock(0);
-        setPrecio(0);
+        setStock(null);
+        setPrecio(null);
         setModal(false);
     };
 
     const enviarDatos = () => {
-        setError(false);
-        validar([nombre, marca, stock, precio]);
-        if (!error) {
-            api.setNuevoProducto({ nombre, marca, stock, precio })
-                .then((res) => limpiarDatos)
-                .catch((err) => {
-                    console.log("error", err);
-                })
-                .finally(() => setModal(false));
-        }
+        console.log(nombre, marca, stock, precio);
+        // api.setNuevoProducto({ nombre, marca, stock, precio })
+        //     .then((res) => {
+        //         if (res.error) {
+        //             setError(true);
+        //         } else {
+        //             setError(false);
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.log("error", err);
+        //     });
+        // .finally(() => setModal(false));
     };
 
+    useEffect(() => {
+        validar([nombre, marca, stock, precio]);
+    }, [nombre, marca, stock, precio]);
+
     const validar = ([...args]) => {
-        args.map((arg) => {
-            if (arg === null || arg === "" || arg === 0) setError(true);
+        args.forEach((arg) => {
+            if (arg === null || arg === "" || arg === 0) {
+                setError(true);
+                return;
+            } else {
+                setError(false);
+            }
         });
     };
     return (
         <div>
-            <Modal show={show}>
+            <Modal size="lg" show={show}>
                 <Modal.Header>
                     <Modal.Title>Nuevo Producto</Modal.Title>
                 </Modal.Header>
@@ -124,7 +136,11 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="success" onClick={() => enviarDatos()}>
+                    <Button
+                        variant="success"
+                        disabled={error}
+                        onClick={() => enviarDatos()}
+                    >
                         Cargar
                     </Button>
                 </Modal.Footer>

@@ -4,6 +4,7 @@ import { Clientes } from "./Componentes/ClientesComponent/Clientes";
 import { CuentaCorriente } from "./Componentes/CuentaCorrienteComponent/CuentaCorriente";
 import { Vendedores } from "./Componentes/VendedoresComponent/Vendedores";
 import { Marcas } from "./Componentes/MarcasComponent/Marcas";
+import { Compras } from "./Componentes/ComprasComponent/Compras";
 import { Proveedores } from "./Componentes/ProveedoresComponent/Proveedores";
 import { Ventas } from "./Componentes/VentasComponent/Ventas";
 import { Login } from "./Componentes/LoginComponent/Login";
@@ -53,6 +54,8 @@ function App() {
                         path="/cuenta-corriente"
                         element={<CuentaCorriente />}
                     />
+                    <Route path="/compras" element={<Compras />} />
+
                     <Route path="/vendedores" element={<Vendedores />} />
                 </Routes>
             </div>

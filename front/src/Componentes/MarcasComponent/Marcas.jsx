@@ -23,7 +23,14 @@ export const Marcas = ({ match, history }) => {
             },
             {
                 label: "Stock total",
-                field: "id",
+                field: "cantidadTotal",
+                name: "id",
+                width: 100,
+                sort: "asc",
+            },
+            {
+                label: "En transito",
+                field: "enTransito",
                 name: "id",
                 width: 100,
                 sort: "asc",

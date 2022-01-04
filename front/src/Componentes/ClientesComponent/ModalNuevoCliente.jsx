@@ -44,7 +44,7 @@ export const ModalNuevoCliente = ({ show, setModal, api }) => {
 
     return (
         <div>
-            <Modal show={show}>
+            <Modal size="lg" show={show}>
                 <Modal.Header>
                     <Modal.Title>Nuevo Cliente</Modal.Title>
                 </Modal.Header>

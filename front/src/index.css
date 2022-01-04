@@ -17,7 +17,8 @@ code {
 .main-sidebar,
 .btn-success:visited,
 .btn-success:focus,
-.btn-success:hover {
+.btn-success:hover,
+.btn-success:disabled {
     background-color: #210f04;
     color: #ff0000 !important;
 }

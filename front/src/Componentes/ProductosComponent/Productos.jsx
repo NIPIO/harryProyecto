@@ -46,6 +46,7 @@ export const Productos = () => {
                 width: 150,
             },
         ],
+        buttons: ["colvis"],
         rows: productos,
     };
 
@@ -109,6 +110,7 @@ export const Productos = () => {
                                     width="100px"
                                     striped
                                     bordered
+                                    hover
                                     displayEntries={false}
                                     small
                                     searchLabel="Buscar"

@@ -1,5 +1,5 @@
 import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const ModalNuevaMarca = ({ show, setModal, api }) => {
     const [nombre, setNombre] = useState(null);
@@ -12,7 +12,6 @@ export const ModalNuevaMarca = ({ show, setModal, api }) => {
 
     const enviarDatos = () => {
         setError(false);
-        validar(nombre);
         if (!error) {
             api.setNuevaMarca({ nombre })
                 .then((res) => limpiarDatos)
@@ -23,13 +22,13 @@ export const ModalNuevaMarca = ({ show, setModal, api }) => {
         }
     };
 
-    const validar = (nombre) => {
-        if (nombre === "") setError(true);
-    };
+    useEffect(() => {
+        setError(nombre === "" || nombre === null);
+    }, [nombre]);
 
     return (
         <div>
-            <Modal show={show}>
+            <Modal size="lg" show={show}>
                 <Modal.Header>
                     <Modal.Title>Nueva Marca</Modal.Title>
                 </Modal.Header>
@@ -57,7 +56,11 @@ export const ModalNuevaMarca = ({ show, setModal, api }) => {
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="success" onClick={() => enviarDatos()}>
+                    <Button
+                        variant="success"
+                        disabled={error}
+                        onClick={() => enviarDatos()}
+                    >
                         Cargar
                     </Button>
                 </Modal.Footer>

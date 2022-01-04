@@ -9,7 +9,7 @@ import {
     Alert,
 } from "react-bootstrap";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { Spinner, Container } from "react-bootstrap";
@@ -18,14 +18,14 @@ import { TablaNuevaVenta } from "./TablaNuevaVenta";
 export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
     const [cliente, setCliente] = useState(null);
     const [vendedor, setVendedor] = useState(null);
-    const [rowsProductos, setFilas] = useState([
-        {
-            producto: "",
-            nombre: "",
-            cantidad: 1,
-            precioUnitario: "",
-        },
-    ]);
+    const [rowsProductos, setFilas] = useState([]);
+
+    let row = {
+        producto: "",
+        nombre: "",
+        cantidad: 1,
+        precioUnitario: "",
+    };
 
     const [error, setError] = useState(false);
 
@@ -65,32 +65,27 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
     };
 
     const enviarDatos = () => {
-        setError(false);
-        validar([cliente, vendedor]);
+        api.setNuevaVenta({
+            cliente,
+            vendedor,
+            rowsProductos,
+        })
+            .then((res) => limpiarDatos, setModal(false), setError(false))
+            .catch((err) => {
+                setError(true);
+            });
+    };
+
+    useEffect(() => {
         validarRowsProductos(rowsProductos);
-
-        if (!error) {
-            api.setNuevaVenta({
-                cliente,
-                vendedor,
-                rowsProductos,
-            })
-                .then((res) => limpiarDatos)
-                .catch((err) => {
-                    console.log("error", err);
-                })
-                .finally(() => setModal(false));
-        }
-    };
-
-    const validar = ([...args]) => {
-        args.map((arg) => {
-            if (arg === null) setError(true);
-        });
-    };
+    }, [cliente, vendedor, rowsProductos]);
 
     const validarRowsProductos = (rowsProductos) => {
-        rowsProductos.map((arg) => {
+        if (rowsProductos.length === 0) {
+            setError(true);
+            return;
+        }
+        rowsProductos.forEach((arg) => {
             if (
                 arg.producto === "" ||
                 arg.nombre === "" ||
@@ -98,6 +93,9 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                 arg.precioUnitario === ""
             ) {
                 setError(true);
+                return;
+            } else {
+                setError(false);
             }
         });
     };
@@ -127,7 +125,7 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
 
     return (
         <div>
-            <Modal show={show} size="lg">
+            <Modal size="lg" show={show}>
                 <Modal.Header>
                     <Modal.Title>Nueva Venta</Modal.Title>
                 </Modal.Header>
@@ -147,9 +145,11 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                                         }
                                         as="select"
                                     >
-                                        <option value="">Seleccioná</option>
                                         {allClientes.data.map((cliente) => (
-                                            <option key={cliente.id}>
+                                            <option
+                                                value={cliente.id}
+                                                key={cliente.id}
+                                            >
                                                 {cliente.nombre}
                                             </option>
                                         ))}
@@ -169,9 +169,11 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                                         }
                                         as="select"
                                     >
-                                        <option value="">Seleccioná</option>
                                         {allVendedores.data.map((vendedor) => (
-                                            <option key={vendedor.id}>
+                                            <option
+                                                value={vendedor.id}
+                                                key={vendedor.id}
+                                            >
                                                 {vendedor.nombre}
                                             </option>
                                         ))}
@@ -184,6 +186,7 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                             productos={allProductos.data}
                             setFilas={setFilas}
                             filas={rowsProductos}
+                            row={row}
                         />
                     </Form>
                 </Modal.Body>
@@ -191,7 +194,11 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="success" onClick={() => enviarDatos()}>
+                    <Button
+                        variant="success"
+                        disabled={error}
+                        onClick={() => enviarDatos()}
+                    >
                         Cargar
                     </Button>
                 </Modal.Footer>

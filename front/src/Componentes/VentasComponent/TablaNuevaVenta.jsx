@@ -2,7 +2,7 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import { Button, Form } from "react-bootstrap";
 import { useState } from "react";
 
-export const TablaNuevaVenta = ({ productos, filas, setFilas }) => {
+export const TablaNuevaVenta = ({ productos, filas, setFilas, row }) => {
     const handleChangeSelect = (e, idx) => {
         let idProducto = e.target.selectedIndex - 1;
         filas[idx]["producto"] = idProducto;

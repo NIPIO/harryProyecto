@@ -14,6 +14,7 @@ class ProductosController extends Controller
 
     public function index() {
         $productos = Productos::with('marcas')->get();
+        $productos = Productos::orderBy('id', 'DESC')->with(['marcas'])->get();
 
         return response()->json(['status' => 200, 'data' => $productos]);
     }
@@ -23,6 +24,10 @@ class ProductosController extends Controller
 
         $req = $request->all();
 
+        if (Productos::where('nombre', $req['nombre'])) {
+            return response()->json(['error' => true, 'data' => 'Existe un producto con ese nombre']);
+        }
+ 
         $producto = new Productos();
         $producto->nombre = $req['nombre'];
         $producto->marca = $req['marca'];
@@ -30,6 +35,6 @@ class ProductosController extends Controller
         $producto->stock= $req['stock'];
         $producto->save();
 
-        return response()->json(['status' => 200]);
+        return response()->json(['error' => false]);
     }
 }

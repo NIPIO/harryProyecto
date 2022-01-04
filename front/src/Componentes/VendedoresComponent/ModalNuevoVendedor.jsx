@@ -8,7 +8,7 @@ import {
     FormControl,
     Alert,
 } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ModalNuevoVendedor = ({ show, setModal, api }) => {
     const [nombre, setNombre] = useState(null);
@@ -24,27 +24,32 @@ export const ModalNuevoVendedor = ({ show, setModal, api }) => {
     };
 
     const enviarDatos = () => {
-        setError(false);
-        validar([nombre, telefono, email]);
-        if (!error) {
-            api.setNuevoVendedor({ nombre, telefono, email })
-                .then((res) => limpiarDatos)
-                .catch((err) => {
-                    console.log("error", err);
-                })
-                .finally(() => setModal(false));
-        }
+        api.setNuevoVendedor({ nombre, telefono, email })
+            .then((res) => limpiarDatos)
+            .catch((err) => {
+                console.log("error", err);
+            })
+            .finally(() => setModal(false));
     };
 
     const validar = ([...args]) => {
-        args.map((arg) => {
-            if (arg === null) setError(true);
+        args.forEach((arg) => {
+            if (arg === null || arg === "") {
+                setError(true);
+                return;
+            } else {
+                setError(false);
+            }
         });
     };
 
+    useEffect(() => {
+        validar([nombre, telefono, email]);
+    }, [nombre, telefono, email]);
+
     return (
         <div>
-            <Modal show={show}>
+            <Modal size="lg" show={show}>
                 <Modal.Header>
                     <Modal.Title>Nuevo Cliente</Modal.Title>
                 </Modal.Header>
@@ -103,7 +108,11 @@ export const ModalNuevoVendedor = ({ show, setModal, api }) => {
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
                         Cerrar
                     </Button>
-                    <Button variant="success" onClick={() => enviarDatos()}>
+                    <Button
+                        variant="success"
+                        disabled={error}
+                        onClick={() => enviarDatos()}
+                    >
                         Cargar
                     </Button>
                 </Modal.Footer>

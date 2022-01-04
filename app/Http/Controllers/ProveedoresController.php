@@ -12,7 +12,8 @@ class ProveedoresController extends Controller
     }
 
     public function index() {
-        $proveedores = Proveedores::all();
+        $proveedores = Proveedores::orderBy('id', 'DESC')->get();
+
         return response()->json(['status' => 200, 'data' => $proveedores]);
     }
 

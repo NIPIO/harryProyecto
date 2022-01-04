@@ -48,16 +48,34 @@ export const LeftMenu = () => {
                                         <p>Marcas</p>
                                     </a>
                                 </li>
+
+                                <hr />
+
                                 <li className="nav-item">
                                     <a href="/ventas" className="nav-link">
                                         <i className=" nav-icon fas fa-dollar-sign"></i>
                                         <p>Ventas</p>
                                     </a>
                                 </li>
+
+                                <li className="nav-item">
+                                    <a href="/vendedores" className="nav-link">
+                                        <i className="nav-icon fas fa-user-circle" />
+                                        <p>Vendedores</p>
+                                    </a>
+                                </li>
                                 <li className="nav-item">
                                     <a href="/clientes" className="nav-link">
                                         <i className="nav-icon fas fa-user-friends" />
                                         <p>Clientes</p>
+                                    </a>
+                                </li>
+
+                                <hr />
+                                <li className="nav-item">
+                                    <a href="/compras" className="nav-link">
+                                        <i className="nav-icon fas fa-university" />
+                                        <p>Compras</p>
                                     </a>
                                 </li>
                                 <li className="nav-item">
@@ -73,13 +91,6 @@ export const LeftMenu = () => {
                                     >
                                         <i className="nav-icon fas fa-university" />
                                         <p>Cuentas Corrientes</p>
-                                    </a>
-                                </li>
-
-                                <li className="nav-item">
-                                    <a href="/vendedores" className="nav-link">
-                                        <i className="nav-icon fas fa-user-circle" />
-                                        <p>Vendedores</p>
                                     </a>
                                 </li>
                             </ul>

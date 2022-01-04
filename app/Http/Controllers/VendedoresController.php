@@ -12,7 +12,8 @@ class VendedoresController extends Controller
     }
 
     public function index() {
-        $vendedores = Vendedores::all();
+        $vendedores = Vendedores::orderBy('id', 'DESC')->get();
+
         return response()->json(['status' => 200, 'data' => $vendedores]);
     }
 

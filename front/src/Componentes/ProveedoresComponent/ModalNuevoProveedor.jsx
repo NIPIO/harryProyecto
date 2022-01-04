@@ -42,12 +42,12 @@ export const ModalNuevoProveedor = ({ show, setModal, api }) => {
         <div>
             <Modal show={show}>
                 <Modal.Header>
-                    <Modal.Title>Nuevo Cliente</Modal.Title>
+                    <Modal.Title>Nuevo Proveedor</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form className="signup-form">
                         <Row className="mb-3">
-                            <Col md={6} sm={12}>
+                            <Col sm={12}>
                                 <Form.Group
                                     as={Col}
                                     className="mb-3"

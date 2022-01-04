@@ -15,7 +15,7 @@ class VentasController extends Controller
     }
 
     public function index() {
-        $ventas = Ventas::with(['cliente', 'producto', 'vendedor'])->get();
+        $ventas = Ventas::orderBy('id', 'DESC')->with(['cliente', 'producto', 'vendedor'])->get();
 
         return response()->json(['status' => 200, 'data' => $ventas]);
     }
@@ -50,8 +50,8 @@ class VentasController extends Controller
 
         } catch (\Throwable $e) {
             Log::error($e->getMessage() . $e->getTraceAsString());
-            dd($e->getMessage());
             DB::rollBack();
+            return response()->json(['status' => 500]);
         }
 
         return response()->json(['status' => 200]);

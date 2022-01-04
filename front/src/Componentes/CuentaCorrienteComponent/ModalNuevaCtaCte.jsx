@@ -42,7 +42,7 @@ export const ModalNuevaCtaCte = ({ show, setModal, api, proveedores }) => {
 
     return (
         <div>
-            <Modal show={show}>
+            <Modal size="lg" show={show}>
                 <Modal.Header>
                     <Modal.Title>Nueva Cte Cte</Modal.Title>
                 </Modal.Header>
