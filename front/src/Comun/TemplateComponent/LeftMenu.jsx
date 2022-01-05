@@ -1,4 +1,13 @@
+import { useEffect, useState } from "react";
+
 export const LeftMenu = () => {
+    const [nombre, setNombre] = useState("");
+
+    useEffect(() => {
+        let obj = JSON.parse(localStorage.getItem("logueado"));
+        setNombre(obj.usuario);
+    }, []);
+
     return (
         <>
             <div>
@@ -25,7 +34,7 @@ export const LeftMenu = () => {
                             </div> */}
                             <div className="info">
                                 <a href="/productos" className="d-block">
-                                    Usuario Nombre
+                                    Usuario: {nombre}
                                 </a>
                             </div>
                         </div>

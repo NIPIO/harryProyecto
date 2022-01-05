@@ -28,6 +28,9 @@ export const api = {
     getVentas: () =>
         client.get(API_PORT + "/api/ventas", {}).then((res) => res.data),
 
+    getCompras: () =>
+        client.get(API_PORT + "/api/compras", {}).then((res) => res.data),
+
     getCuentasCorrientes: () =>
         client
             .get(API_PORT + "/api/cuentas-corrientes", {})
@@ -42,6 +45,9 @@ export const api = {
 
     setNuevaVenta: (data) =>
         client.post(API_PORT + "/api/venta", data).then((res) => res.data),
+
+    setNuevaCompra: (data) =>
+        client.post(API_PORT + "/api/compra", data).then((res) => res.data),
 
     setNuevoCliente: (data) =>
         client.post(API_PORT + "/api/cliente", data).then((res) => res.data),
@@ -58,8 +64,8 @@ export const api = {
 
 export const signin = {
     postLogin: (data) =>
-        client.post(API_PORT + "/login", { data }).then((res) => res.data),
+        client.post(API_PORT + "/api/login", data).then((res) => res.data),
 
     postRegistro: (data) =>
-        client.get(API_PORT + "/sign-up", { data }).then((res) => res.data),
+        client.post(API_PORT + "/api/registro", data).then((res) => res.data),
 };

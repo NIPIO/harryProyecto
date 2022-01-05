@@ -3,37 +3,12 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
 import { ModalNuevoProveedor } from "./ModalNuevoProveedor";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const Proveedores = () => {
     const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
-
-    const data = {
-        columns: [
-            {
-                label: "Nombre",
-                field: "nombre",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Creado",
-                field: "created_at",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Modificado",
-                field: "updated_at",
-                width: 100,
-                sort: "asc",
-            },
-        ],
-        rows: proveedores,
-    };
 
     const allProveedores = useQuery("proveedores", () =>
         api
@@ -82,17 +57,33 @@ export const Proveedores = () => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                />
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Otros campos?</th>
+                                            <th>Creado</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {proveedores.map((proveedor) => (
+                                            <tr>
+                                                <td>{proveedor.nombre}</td>
+                                                <td>Otros campos?</td>
+                                                <td>{proveedor.created_at}</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>

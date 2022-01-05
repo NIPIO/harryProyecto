@@ -14,7 +14,7 @@ class ProductosController extends Controller
 
     public function index() {
         $productos = Productos::with('marcas')->get();
-        $productos = Productos::orderBy('id', 'DESC')->with(['marcas'])->get();
+        $productos = Productos::orderBy('id', 'ASC')->with(['marcas'])->get();
 
         return response()->json(['status' => 200, 'data' => $productos]);
     }

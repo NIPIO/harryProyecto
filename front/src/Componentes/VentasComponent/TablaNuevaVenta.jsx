@@ -5,6 +5,7 @@ import { useState } from "react";
 export const TablaNuevaVenta = ({ productos, filas, setFilas, row }) => {
     const handleChangeSelect = (e, idx) => {
         let idProducto = e.target.selectedIndex - 1;
+        console.log(idProducto);
         filas[idx]["producto"] = idProducto;
         filas[idx]["precioUnitario"] = productos[idProducto].precio;
         filas[idx]["nombre"] = productos[idProducto].nombre;

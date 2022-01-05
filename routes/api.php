@@ -4,7 +4,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\ComprasController;
 use App\Http\Controllers\CtaCteController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\VendedoresController;
 use App\Http\Controllers\MarcasController;
@@ -34,6 +36,7 @@ Route::get('/', function () {
 Route::prefix('')->group(function () {
     Route::get('productos', [ProductosController::class, 'index']);
     Route::get('ventas', [VentasController::class, 'index']);
+    Route::get('compras', [ComprasController::class, 'index']);
     Route::get('marcas', [MarcasController::class, 'index']);
     Route::get('proveedores', [ProveedoresController::class, 'index']);
     Route::get('vendedores', [VendedoresController::class, 'index']);
@@ -45,9 +48,16 @@ Route::prefix('')->group(function () {
     // Route::get('usuario/{users_with_trashed}', [AdminController::class, 'show_user'])->middleware(['permiso:Ver info de usuario']);
     // Route::get('rol/{rolID}', [AdminController::class, 'show_rol'])->where('rolID', "\d+")->middleware(['permiso:Ver rol']);
 
+    Route::post('login', [LoginController::class, 'login']);
+    Route::post('registro', [LoginController::class, 'registro']);
+    
+
+
+
     Route::post('producto', [ProductosController::class, 'nuevoProducto']);
     Route::post('marca', [MarcasController::class, 'nuevaMarca']);
     Route::post('venta', [VentasController::class, 'nuevaVenta']);
+    Route::post('compra', [ComprasController::class, 'nuevaCompra']);
     Route::post('cliente', [ClientesController::class, 'nuevoCliente']);
     Route::post('ctacte', [CtaCteController::class, 'nuevaCtaCte']);
     Route::post('vendedor', [VendedoresController::class, 'nuevoVendedor']);

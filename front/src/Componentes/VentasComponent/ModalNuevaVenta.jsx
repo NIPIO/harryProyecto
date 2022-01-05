@@ -1,14 +1,4 @@
-import {
-    Button,
-    Modal,
-    Form,
-    InputGroup,
-    Col,
-    Row,
-    FormControl,
-    Alert,
-} from "react-bootstrap";
-
+import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
@@ -19,6 +9,7 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
     const [cliente, setCliente] = useState(null);
     const [vendedor, setVendedor] = useState(null);
     const [rowsProductos, setFilas] = useState([]);
+    const [error, setError] = useState(false);
 
     let row = {
         producto: "",
@@ -26,8 +17,6 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
         cantidad: 1,
         precioUnitario: "",
     };
-
-    const [error, setError] = useState(false);
 
     const allClientes = useQuery("clientes", () =>
         api

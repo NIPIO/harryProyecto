@@ -3,38 +3,13 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
 import { ModalNuevaCtaCte } from "./ModalNuevaCtaCte";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const CuentaCorriente = ({ match, history }) => {
     const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
     const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
-
-    const data = {
-        columns: [
-            {
-                label: "Proveedor",
-                field: "proveedor.nombre",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Saldo",
-                field: "saldo",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Ultima Mod.",
-                field: "updated_at",
-                width: 100,
-                sort: "asc",
-            },
-        ],
-        rows: cuentasCorrientes,
-    };
 
     const allCuentasCorrientes = useQuery("cuentasCorrientes", () =>
         api
@@ -93,17 +68,33 @@ export const CuentaCorriente = ({ match, history }) => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                />
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Saldo</th>
+                                            <th>Ult. Modificacion</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {cuentasCorrientes.map((cta) => (
+                                            <tr>
+                                                <td>{cta.proveedor.nombre}</td>
+                                                <td>{cta.saldo}</td>
+                                                <td>{cta.updated_at}</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>

@@ -18,8 +18,9 @@ class MarcasController extends Controller
     public function index() {
         $this->marcas = Marcas::orderBy('id', 'ASC')->get();
 
-        $this->getStockTotal();
-        $this->getStockEnTransito();
+        $this->getStock('stock');
+        $this->getStock('en_transito');
+        
         return response()->json(['status' => 200, 'data' => $this->marcas]);
     }
 
@@ -35,34 +36,20 @@ class MarcasController extends Controller
         return response()->json(['status' => 200]);
     }
 
-    public function getStockTotal() {
+    public function getStock($tipo) {
         foreach ($this->marcas as $marca) {
             $productosDeEsaMarca = Productos::where('marca', '=', $marca->id)->get();
 
             $cantidad = 0;
             foreach ($productosDeEsaMarca as $producto) {
-               $cantidad += $producto->stock;
+               $cantidad += $producto->$tipo;
             }
 
-            $this->marcas[$marca->id - 1]->cantidadTotal = $cantidad;
+            $this->marcas[$marca->id - 1]->$tipo = $cantidad;
         }
 
     }
 
     
-    public function getStockEnTransito() {
-        foreach ($this->marcas as $marca) {
-            $productosDeEsaMarca = Productos::where('marca', '=', $marca->id)->get();
-
-            $cantidad = 0;
-            foreach ($productosDeEsaMarca as $producto) {
-               $cantidad += $producto->en_transito;
-            }
-
-            $this->marcas[$marca->id - 1]->enTransito = $cantidad;
-        }
-
-        return $this->marcas;
-
-    }
+    
 }

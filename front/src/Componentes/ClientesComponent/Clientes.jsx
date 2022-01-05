@@ -3,37 +3,12 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
 import { ModalNuevoCliente } from "./ModalNuevoCliente";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const Clientes = ({ match, history }) => {
     const [clientes, setClientes] = useState([]);
     const [modal, setModal] = useState(false);
-
-    const data = {
-        columns: [
-            {
-                label: "Nombre",
-                field: "nombre",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Email",
-                field: "email",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Telefono",
-                field: "telefono",
-                width: 100,
-                sort: "asc",
-            },
-        ],
-        rows: clientes,
-    };
 
     const allClientes = useQuery("clientes", () =>
         api
@@ -83,17 +58,35 @@ export const Clientes = ({ match, history }) => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                />
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Mail</th>
+                                            <th>Telefono</th>
+                                            <th>Creado</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {clientes.map((cliente) => (
+                                            <tr>
+                                                <td>{cliente.nombre}</td>
+                                                <td>{cliente.email}</td>
+                                                <td>{cliente.telefono}</td>
+                                                <td>{cliente.created_at}</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>

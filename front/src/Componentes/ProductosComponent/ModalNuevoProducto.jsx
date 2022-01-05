@@ -15,18 +15,18 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
     const [marca, setMarca] = useState(null);
     const [stock, setStock] = useState(null);
     const [precio, setPrecio] = useState(null);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
 
     const limpiarDatos = () => {
         setNombre(null);
         setMarca(null);
         setStock(null);
         setPrecio(null);
+        setError("");
         setModal(false);
     };
 
     const enviarDatos = () => {
-        console.log(nombre, marca, stock, precio);
         // api.setNuevoProducto({ nombre, marca, stock, precio })
         //     .then((res) => {
         //         if (res.error) {

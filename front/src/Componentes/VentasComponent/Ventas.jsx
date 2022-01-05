@@ -5,7 +5,7 @@ import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { MDBDataTable } from "mdbreact";
 import { ModalNuevaVenta } from "./ModalNuevaVenta";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const Ventas = ({ match, history }) => {
     const [ventas, setVentas] = useState([]);
@@ -106,17 +106,39 @@ export const Ventas = ({ match, history }) => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                />
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>Vendedor</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio U.</th>
+                                            <th>Precio Total</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {ventas.map((venta) => (
+                                            <tr>
+                                                <td>{venta.cliente.nombre}</td>
+                                                <td>{venta.vendedor.nombre}</td>
+                                                <td>{venta.producto.nombre}</td>
+                                                <td>{venta.cantidad}</td>
+                                                <td>{venta.precio_unidad}</td>
+                                                <td>{venta.precio_total}</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>

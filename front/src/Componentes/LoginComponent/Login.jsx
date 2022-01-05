@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { signin } from "../../api";
-import { Navigate } from "react-router";
+import { Alert } from "react-bootstrap";
 
 export const Login = () => {
     const [usuario, setUsuario] = useState("");
     const [password, setPassword] = useState("");
-
+    const [error, setError] = useState("");
     const login = () => {
-        localStorage.setItem("logueado", { usuario, password });
-        window.location.reload();
-        // signin
-        //     .postLogin()
-        //     .then((res) => <Navigate to="/productos" />)
-        //     .catch((err) => {
-        //         alert(err);
-        //     });
+        signin
+            .postLogin({ usuario, password })
+            .then((res) => {
+                if (res.status === 401) {
+                    setError(res.data);
+                } else {
+                    localStorage.setItem("logueado", JSON.stringify(res.data));
+                    window.location.reload();
+                }
+            })
+            .catch((err) => {
+                alert("algo pasó");
+            });
     };
+
     return (
         <div className="register-box mt-5 mx-auto ">
             <div className="register-logo">
@@ -29,7 +35,7 @@ export const Login = () => {
                             className="form-control"
                             placeholder="Usuario"
                             defaultValue={usuario}
-                            onKeyDown={(e) => setUsuario(e.target.value)}
+                            onChange={(e) => setUsuario(e.target.value)}
                         />
                         <div className="input-group-append">
                             <div className="input-group-text">
@@ -40,7 +46,7 @@ export const Login = () => {
                     <div className="input-group mb-3">
                         <input
                             type="password"
-                            onKeyDown={(e) => setPassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="form-control"
                             defaultValue={password}
                         />
@@ -64,11 +70,21 @@ export const Login = () => {
                             <button
                                 type="submit"
                                 onClick={() => login()}
-                                className="btn btn-primary btn-block"
+                                className="btn btn-success btn-block"
                             >
                                 Ingresar
                             </button>
                         </div>
+                    </div>
+                    <div className="mt-3">
+                        {error.length > 0 && (
+                            <Alert
+                                variant="danger"
+                                style={{ textAlign: "center" }}
+                            >
+                                {error}
+                            </Alert>
+                        )}
                     </div>
                 </div>
             </div>

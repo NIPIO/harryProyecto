@@ -3,48 +3,12 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
 import { ModalNuevaMarca } from "./ModalNuevaMarca";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const Marcas = ({ match, history }) => {
     const [marcas, setMarcas] = useState([]);
     const [modal, setModal] = useState(false);
-
-    const data = {
-        columns: [
-            {
-                label: "Marcas",
-                field: "nombre",
-                width: 100,
-                name: "nombre",
-
-                sort: "asc",
-            },
-            {
-                label: "Stock total",
-                field: "cantidadTotal",
-                name: "id",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "En transito",
-                field: "enTransito",
-                name: "id",
-                width: 100,
-                sort: "asc",
-            },
-            // {
-            //     label: "En transito",
-            //     field: "nombre",
-            //     name: "nombre",
-            //     width: 100,
-            //     sort: "asc",
-            // },
-        ],
-        rows: marcas,
-    };
 
     const allMarcas = useQuery("marcas", () =>
         api
@@ -94,17 +58,33 @@ export const Marcas = ({ match, history }) => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                />
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Stock total</th>
+                                            <th>En transito</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {marcas.map((marca) => (
+                                            <tr>
+                                                <td>{marca.nombre}</td>
+                                                <td>{marca.stock}</td>
+                                                <td>{marca.en_transito}</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>

@@ -3,43 +3,13 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
+
 import { ModalNuevoVendedor } from "./ModalNuevoVendedor";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const Vendedores = () => {
     const [vendedores, setVendedores] = useState([]);
     const [modal, setModal] = useState(false);
-
-    const data = {
-        columns: [
-            {
-                label: "Nombre",
-                field: "nombre",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Email",
-                field: "email",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Telefono",
-                field: "telefono",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Comisión General",
-                field: "comision",
-                width: 100,
-                sort: "asc",
-            },
-        ],
-        rows: vendedores,
-    };
 
     const allVendedores = useQuery("vendedores", () =>
         api
@@ -88,17 +58,37 @@ export const Vendedores = () => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                />
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Usuario</th>
+                                            <th>Comision</th>
+                                            <th>Cantidad ventas</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {vendedores.map((vendedor) => (
+                                            <tr>
+                                                <td>{vendedor.nombre}</td>
+                                                <td>{vendedor.usuario}</td>
+                                                <td>
+                                                    {vendedor.comision ?? 0}
+                                                </td>
+                                                <td>¿CANTIDAD VENTAS?</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>

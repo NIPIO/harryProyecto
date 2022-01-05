@@ -3,39 +3,42 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
 import { ModalNuevaCompra } from "./ModalNuevaCompra";
-import { Spinner, Button, Col, Row, Container } from "react-bootstrap";
+import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
-export const Compras = ({ match, history }) => {
-    // const allCompras = useQuery("ventar", () =>
-    //     api
-    //         .getVentas()
-    //         .then((res) => setVentas(res.data))
-    //         .catch((err) => {
-    //             console.log("error", err);
-    //         })
-    // );
+export const Compras = () => {
+    const [compras, setCompras] = useState([]);
+    const [modal, setModal] = useState(false);
+
+    const allCompras = useQuery("compras", () =>
+        api
+            .getCompras()
+            .then((res) => setCompras(res.data))
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
     let location = useLocation();
 
-    // if (allVentas.isLoading) {
-    //     return (
-    //         <div>
-    //             <div className="content-wrapper">
-    //                 <CabeceraBody path={location.pathname} />
-    //                 <Container>
-    //                     <Row>
-    //                         <div className="container-fluid text-center">
-    //                             <Spinner animation="border" role="status">
-    //                                 <span className="visually-hidden"></span>
-    //                             </Spinner>
-    //                         </div>
-    //                     </Row>
-    //                 </Container>
-    //             </div>
-    //         </div>
-    //     );
-    // }
+    if (allCompras.isLoading) {
+        return (
+            <div>
+                <div className="content-wrapper">
+                    <CabeceraBody path={location.pathname} />
+                    <Container>
+                        <Row>
+                            <div className="container-fluid text-center">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden"></span>
+                                </Spinner>
+                            </div>
+                        </Row>
+                    </Container>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -47,7 +50,7 @@ export const Compras = ({ match, history }) => {
                             <Col md={12}>
                                 <Button
                                     variant="success"
-                                    // onClick={() => setModal(true)}
+                                    onClick={() => setModal(true)}
                                 >
                                     Nueva Compra
                                 </Button>
@@ -55,22 +58,53 @@ export const Compras = ({ match, history }) => {
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
-                                {/* <MDBDataTable
-                                    scrollX
-                                    width="100px"
-                                    striped
-                                    bordered
-                                    displayEntries={false}
-                                    small
-                                    searchLabel="Buscar"
-                                    infoLabel={[" ", "de", "de", "registos"]}
-                                    data={data}
-                                /> */}
+                                <Table responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Proveedor</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio U.</th>
+                                            <th>Precio Total</th>
+                                            <th>Fecha Compra</th>
+                                            <th col="2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {compras.map((compra) => (
+                                            <tr>
+                                                <td>
+                                                    {compra.proveedor.nombre}
+                                                </td>
+                                                <td>
+                                                    {compra.producto.nombre}
+                                                </td>
+                                                <td>{compra.cantidad}</td>
+                                                <td>{compra.precio_unidad}</td>
+                                                <td>{compra.precio_total}</td>
+                                                <td>{compra.created_at}</td>
+                                                <td>
+                                                    <Button variant="info">
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger">
+                                                        Borrar
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
                             </div>
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevaCompra />
+                <ModalNuevaCompra
+                    show={modal}
+                    setModal={() => setModal()}
+                    api={api}
+                    location={location}
+                />
             </div>
         </>
     );
