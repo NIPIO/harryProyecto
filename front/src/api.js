@@ -88,6 +88,10 @@ export const api = {
             .put(API_PORT + `/api/cuentas-corrientes/${data.id}`, data)
             .then((res) => res.data),
 
+    putVenta: (data) =>
+        client
+            .put(API_PORT + `/api/venta/${data.id}`, data)
+            .then((res) => res.data),
     //DELETERS
     deleteProducto: (id) =>
         client

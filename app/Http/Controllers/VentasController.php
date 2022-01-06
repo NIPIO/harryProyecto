@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clientes;
 use App\Models\Productos;
+use App\Models\Vendedores;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,14 +24,16 @@ class VentasController extends Controller
 
     public function nuevaVenta(Request $request) {
         $req = $request->all();
-        $cliente = $req['cliente'];
-        $vendedor = $req['vendedor'];
+
+        $cliente = Clientes::where('nombre', $req['cliente'])->first();
+        $vendedor = Vendedores::where('usuario', $req['vendedor'])->first();
+
         DB::beginTransaction();
         try {
             foreach ($req['rowsProductos'] as $productoVenta) {
                 $venta = Ventas::create([
-                    'cliente_id' => $cliente,
-                    'vendedor_id' => $vendedor,
+                    'cliente_id' => $cliente['id'],
+                    'vendedor_id' => $vendedor['id'],
                     'producto_id' => $productoVenta['producto'] + 1,
                     'cantidad' => $productoVenta['cantidad'],
                     'precio_unidad' => $productoVenta['precioUnitario'],
@@ -68,4 +72,7 @@ class VentasController extends Controller
 
     }
 
+    public function editarVenta(Request $request) {
+        dd($request);
+    }
 }

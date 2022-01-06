@@ -1,28 +1,33 @@
-import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
+import {
+    Spinner,
+    Container,
+    Button,
+    Modal,
+    Form,
+    Col,
+    Row,
+} from "react-bootstrap";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
-import { Spinner, Container } from "react-bootstrap";
 import { TablaNuevaVenta } from "../VentasComponent/TablaNuevaVenta";
-import { useState, useRef, useEffect } from "react";
 
-export const ModalNuevaCompra = ({ show, setModal, location, api }) => {
-    const [proveedor, setProveedor] = useState(null);
-    const [rowsProductos, setFilas] = useState([]);
-    const [error, setError] = useState("");
-    const formulario = useRef(null);
-    let form = formulario.current;
-
-    let row = {
-        producto: "",
-        nombre: "",
-        cantidad: 1,
-        precioUnitario: "",
-    };
+import { useForm } from "react-hook-form";
+export const ModalNuevaCompra = ({
+    show,
+    setModal,
+    location,
+    api,
+    edicion,
+    setEdicion,
+    compraEdicion,
+}) => {
+    const [proveedoresSelect, setProveedoresSelect] = useState([]);
 
     const allProveedores = useQuery("proveedores", () =>
         api
             .getProveedores()
-            .then((res) => res.data)
+            .then((res) => setProveedoresSelect(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
@@ -37,58 +42,80 @@ export const ModalNuevaCompra = ({ show, setModal, location, api }) => {
             })
     );
 
+    const [errorApi, setErrorApi] = useState("");
+    const [rowsProductos, setFilas] = useState([]);
+
+    let row = {
+        producto: "",
+        nombre: "",
+        cantidad: 1,
+        precioUnitario: "",
+    };
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm();
+
     const limpiarDatos = () => {
-        form?.reset();
-        setProveedor(null);
-        setFilas([]);
-        setError("");
+        setErrorApi("");
+        setEdicion(false);
         setModal(false);
     };
 
-    const enviarDatos = () => {
-        api.setNuevaCompra({
-            proveedor,
-            rowsProductos,
-        })
-            .then((res) => limpiarDatos, setModal(false), setError(false))
-            .catch((err) => {
-                setError(err);
-            });
-    };
+    const enviarDatos = (data) => {
+        let id = edicion ? compraEdicion.id : null;
 
-    const validarProveedor = () => {
-        if (proveedor === 0 || proveedor === null) {
-            setError("Falta proveedor");
-            return;
-        }
-    };
-    const validarRowsProductos = (rowsProductos) => {
-        if (rowsProductos.length === 0) {
-            setError("Elegí algun producto para comprar");
-            return;
-        }
-        rowsProductos.forEach((arg) => {
-            if (
-                arg.producto === "" ||
-                arg.nombre === "" ||
-                arg.cantidad === "" ||
-                arg.precioUnitario === ""
-            ) {
-                setError("Falta completar algun campo de los productos");
-                return;
-            } else {
-                setError("");
-            }
+        //Chequeo si los productos vendidos tienen todos los datos:
+        let productosInvalidos = rowsProductos.some((prod) => {
+            return (
+                prod.cantidad === "" ||
+                prod.cantidad < 1 ||
+                prod.precioUnitario === ""
+            );
         });
+
+        if (productosInvalidos) {
+            setErrorApi(
+                "Faltan campos en los productos (la cantidad no puede ser negativa)"
+            );
+        } else {
+            setErrorApi("");
+            if (edicion) {
+                // api.putCompra({ id, ...data })
+                //     .then((res) => {
+                //         if (res.error) {
+                //             setErrorApi(res.data);
+                //         } else {
+                //             setEdicion(false);
+                //             setModal(false);
+                //             setErrorApi("");
+                //             reset();
+                //         }
+                //     })
+                //     .catch((err) => {
+                //         setErrorApi(err.response.data.message);
+                //     });
+            } else {
+                api.setNuevaCompra({ rowsProductos, ...data })
+                    .then((res) => {
+                        if (res.error) {
+                            setErrorApi(res.data);
+                        } else {
+                            setEdicion(false);
+                            setModal(false);
+                            setErrorApi("");
+                            reset();
+                        }
+                    })
+                    .catch((err) => {
+                        setErrorApi(err.response.data.message);
+                    });
+            }
+        }
     };
-
-    useEffect(() => {
-        validarRowsProductos(rowsProductos);
-    }, [rowsProductos]);
-
-    useEffect(() => {
-        validarProveedor(proveedor);
-    }, [proveedor]);
 
     if (allProveedores.isLoading || allProductos.isLoading) {
         return (
@@ -112,37 +139,28 @@ export const ModalNuevaCompra = ({ show, setModal, location, api }) => {
     return (
         <div>
             <Modal size="lg" show={show}>
-                <Modal.Header>
-                    <Modal.Title>Nueva Compra</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form className="signup-form">
+                <form onSubmit={handleSubmit(enviarDatos)}>
+                    <Modal.Header>
+                        <Modal.Title>Nueva Compra</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
+                                <Form.Group>
                                     <Form.Label>Proveedor</Form.Label>
-                                    <Form.Control
-                                        onChange={(e) =>
-                                            setProveedor(e.target.selectedIndex)
-                                        }
-                                        as="select"
+                                    <select
+                                        name="proveedor"
+                                        className="form-control"
+                                        {...register("proveedor", {
+                                            required: true,
+                                        })}
                                     >
-                                        <option value="">Seleccioná</option>
-                                        {allProveedores.data.map(
-                                            (proveedor) => (
-                                                <option
-                                                    value={proveedor.id}
-                                                    key={proveedor.id}
-                                                >
-                                                    {proveedor.nombre}
-                                                </option>
-                                            )
-                                        )}
-                                    </Form.Control>
+                                        {proveedoresSelect.map((cliente) => (
+                                            <option key={cliente.id}>
+                                                {cliente.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -153,27 +171,28 @@ export const ModalNuevaCompra = ({ show, setModal, location, api }) => {
                             filas={rowsProductos}
                             row={row}
                         />
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => limpiarDatos()}>
-                        Cerrar
-                    </Button>
-                    <Button
-                        variant="success"
-                        disabled={
-                            error || proveedor === 0 || proveedor === null
-                        }
-                        onClick={() => enviarDatos()}
-                    >
-                        Cargar
-                    </Button>
-                </Modal.Footer>
-                {error.length > 0 && (
-                    <Alert variant="warning" style={{ textAlign: "center" }}>
-                        {error}
-                    </Alert>
-                )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="secondary"
+                            onClick={() => limpiarDatos()}
+                        >
+                            Cerrar
+                        </Button>
+                        <input className="btn btn-success" type="submit" />
+                    </Modal.Footer>
+
+                    {errors.proveedor && (
+                        <div className="bg-warning text-center p-2">
+                            El proveedor es necesario
+                        </div>
+                    )}
+                    {errorApi && (
+                        <div className="bg-warning text-center p-2">
+                            {errorApi}
+                        </div>
+                    )}
+                </form>
             </Modal>
         </div>
     );

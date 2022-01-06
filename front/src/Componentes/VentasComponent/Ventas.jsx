@@ -2,7 +2,7 @@ import { api } from "../../api";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ModalNuevaVenta } from "./ModalNuevaVenta";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
@@ -11,6 +11,7 @@ export const Ventas = ({ match, history }) => {
     const [modal, setModal] = useState(false);
     const [ventaEdicion, setVentaEdicion] = useState(null);
     const [edicion, setEdicion] = useState(false);
+    const [vendedor, setVendedor] = useState(null);
 
     const allVentas = useQuery("ventar", () =>
         api
@@ -21,6 +22,11 @@ export const Ventas = ({ match, history }) => {
             })
     );
     let location = useLocation();
+
+    useEffect(() => {
+        setVendedor(JSON.parse(localStorage.getItem("logueado")));
+        console.log(vendedor);
+    }, []);
 
     if (allVentas.isLoading) {
         return (
@@ -84,12 +90,12 @@ export const Ventas = ({ match, history }) => {
                                                     <Button
                                                         variant="info"
                                                         className="mx-3"
-                                                        // onClick={() => {
-                                                        //     setEdicion(true);
-                                                        //     setVentaEdicion(
-                                                        //         venta
-                                                        //     );
-                                                        // }}
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setVentaEdicion(
+                                                                venta
+                                                            );
+                                                        }}
                                                     >
                                                         Editar
                                                     </Button>
@@ -110,6 +116,7 @@ export const Ventas = ({ match, history }) => {
                     edicion={edicion}
                     setEdicion={setEdicion}
                     ventaEdicion={ventaEdicion}
+                    vendedor={vendedor}
                 />
             </div>
         </>

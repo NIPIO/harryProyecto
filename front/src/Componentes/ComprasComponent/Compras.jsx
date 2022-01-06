@@ -9,6 +9,8 @@ import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 export const Compras = () => {
     const [compras, setCompras] = useState([]);
     const [modal, setModal] = useState(false);
+    const [compraEdicion, setCompraEdicion] = useState(null);
+    const [edicion, setEdicion] = useState(false);
 
     const allCompras = useQuery("compras", () =>
         api
@@ -87,6 +89,12 @@ export const Compras = () => {
                                                     <Button
                                                         variant="info"
                                                         className="mx-3"
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setCompraEdicion(
+                                                                compra
+                                                            );
+                                                        }}
                                                     >
                                                         Editar
                                                     </Button>
@@ -100,10 +108,13 @@ export const Compras = () => {
                     </Container>
                 </div>
                 <ModalNuevaCompra
-                    show={modal}
+                    show={modal || edicion}
+                    location={location}
                     setModal={() => setModal()}
                     api={api}
-                    location={location}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    compraEdicion={compraEdicion}
                 />
             </div>
         </>

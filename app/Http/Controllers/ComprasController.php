@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Compras;
 use App\Models\Productos;
+use App\Models\Proveedores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,12 +24,13 @@ class ComprasController extends Controller
     
     public function nuevaCompra(Request $request) {
         $req = $request->all();
-        $proveedor = $req['proveedor'];
+        $proveedor = Proveedores::where('nombre', $req['proveedor'])->first();
+
         DB::beginTransaction();
         try {
             foreach ($req['rowsProductos'] as $productoCompra) {
                 $venta = Compras::create([
-                'proveedor_id' => $proveedor,
+                'proveedor_id' => $proveedor['id'],
                 'producto_id' => $productoCompra['producto'] + 1,
                 'cantidad' => $productoCompra['cantidad'],
                 'precio_unidad' => $productoCompra['precioUnitario'],

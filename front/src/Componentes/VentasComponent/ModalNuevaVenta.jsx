@@ -1,9 +1,17 @@
-import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
-import { useEffect, useRef, useState } from "react";
+import {
+    Spinner,
+    Container,
+    Button,
+    Modal,
+    Form,
+    Col,
+    Row,
+} from "react-bootstrap";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
-import { Spinner, Container } from "react-bootstrap";
 import { TablaNuevaVenta } from "./TablaNuevaVenta";
+import { useForm } from "react-hook-form";
 
 export const ModalNuevaVenta = ({
     show,
@@ -13,24 +21,13 @@ export const ModalNuevaVenta = ({
     edicion,
     setEdicion,
     ventaEdicion,
+    vendedor,
 }) => {
-    const [error, setError] = useState("");
-    const formulario = useRef(null);
-    const [rowsProductos, setFilas] = useState([]);
-    const [productosVentaEdicion, setProductosVentaEdicion] = useState([]);
-    const form = formulario.current;
-
-    let row = {
-        producto: "",
-        nombre: "",
-        cantidad: 1,
-        precioUnitario: "",
-    };
-
+    const [clientesSelect, setClientesSelect] = useState([]);
     const allClientes = useQuery("clientes", () =>
         api
             .getClientes()
-            .then((res) => res.data)
+            .then((res) => setClientesSelect(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
@@ -45,74 +42,90 @@ export const ModalNuevaVenta = ({
             })
     );
 
-    const allVendedores = useQuery("vendedores", () =>
-        api
-            .getVendedores()
-            .then((res) => res.data)
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
+    const [errorApi, setErrorApi] = useState("");
 
-    useEffect(() => {
-        if (edicion) {
-            api.getVenta(ventaEdicion.id)
-                .then((res) => setProductosVentaEdicion(res.data))
-                .catch((err) => {
-                    console.log("error", err);
-                });
-        }
-    }, [edicion]);
+    const [rowsProductos, setFilas] = useState([]);
+
+    let row = {
+        producto: "",
+        nombre: "",
+        cantidad: 1,
+        precioUnitario: "",
+    };
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm();
 
     const limpiarDatos = () => {
-        form?.reset();
+        setErrorApi("");
         setEdicion(false);
-        setError("");
-        setFilas([]);
         setModal(false);
     };
 
-    const enviarDatos = () => {
-        // api.setNuevaVenta({
-        //     cliente,
-        //     vendedor,
-        //     rowsProductos,
-        // })
-        //     .then((res) => limpiarDatos, setModal(false), setError(false))
-        //     .catch((err) => {
-        //         setError(true);
-        //     });
+    const enviarDatos = (data) => {
+        let id = edicion ? ventaEdicion.id : null;
+
+        //Chequeo si los productos vendidos tienen todos los datos:
+        let productosInvalidos = rowsProductos.some((prod) => {
+            return (
+                prod.cantidad === "" ||
+                prod.cantidad < 1 ||
+                prod.precioUnitario === ""
+            );
+        });
+
+        if (productosInvalidos) {
+            setErrorApi(
+                "Faltan campos en los productos (la cantidad no puede ser negativa)"
+            );
+        } else {
+            setErrorApi("");
+            if (edicion) {
+                api.putVenta({ id, ...data })
+                    .then((res) => {
+                        if (res.error) {
+                            setErrorApi(res.data);
+                        } else {
+                            setEdicion(false);
+                            setModal(false);
+                            setErrorApi("");
+                            reset();
+                        }
+                    })
+                    .catch((err) => {
+                        setErrorApi(err.response.data.message);
+                    });
+            } else {
+                api.setNuevaVenta({ rowsProductos, ...data })
+                    .then((res) => {
+                        if (res.error) {
+                            setErrorApi(res.data);
+                        } else {
+                            setEdicion(false);
+                            setModal(false);
+                            setErrorApi("");
+                            reset();
+                        }
+                    })
+
+                    .catch((err) => {
+                        setErrorApi(err.response.data.message);
+                    });
+            }
+        }
     };
 
-    const validate = ([...args]) => {
-        return args.some((arg) => arg === null || arg === "" || arg === 0);
-    };
+    useEffect(() => {
+        setValue("cliente", edicion ? ventaEdicion.cliente : null);
+        setValue("vendedor", vendedor.usuario);
+    }, [edicion]);
 
-    // const validarRowsProductos = (rowsProductos) => {
-    //     if (rowsProductos.length === 0) {
-    //         setError(true);
-    //         return;
-    //     }
-    //     rowsProductos.forEach((arg) => {
-    //         if (
-    //             arg.producto === "" ||
-    //             arg.nombre === "" ||
-    //             arg.cantidad === "" ||
-    //             arg.precioUnitario === ""
-    //         ) {
-    //             setError(true);
-    //             return;
-    //         } else {
-    //             setError(false);
-    //         }
-    //     });
-    // };
-
-    if (
-        allClientes.isLoading ||
-        allProductos.isLoading ||
-        allVendedores.isLoading
-    ) {
+    if (allClientes.isLoading || allProductos.isLoading) {
         return (
             <div>
                 <div className="content-wrapper">
@@ -134,65 +147,44 @@ export const ModalNuevaVenta = ({
     return (
         <div>
             <Modal size="lg" show={show}>
-                <Modal.Header>
-                    <Modal.Title>
-                        {edicion ? "Editar" : "Nueva"} Venta
-                    </Modal.Title>{" "}
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        className="signup-form"
-                        onSubmit={() => enviarDatos}
-                        ref={formulario}
-                        noValidate
-                    >
+                <form onSubmit={handleSubmit(enviarDatos)}>
+                    <Modal.Header>
+                        <Modal.Title>
+                            {edicion ? "Editar" : "Nueva"} Venta
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <Row className="mb-3">
+                            {console.log(ventaEdicion)}
                             <Col md={6} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
+                                <Form.Group>
                                     <Form.Label>Cliente</Form.Label>
-                                    <Form.Control as="select" name={"cliente"}>
-                                        {allClientes.data.map((cliente) => (
-                                            <option
-                                                defaultValue={
-                                                    edicion
-                                                        ? ventaEdicion.cliente
-                                                              .nombre
-                                                        : null
-                                                }
-                                                key={cliente.id}
-                                            >
+                                    <select
+                                        name="cliente"
+                                        className="form-control"
+                                        {...register("cliente", {
+                                            required: true,
+                                        })}
+                                    >
+                                        {clientesSelect.map((cliente) => (
+                                            <option key={cliente.id}>
                                                 {cliente.nombre}
                                             </option>
                                         ))}
-                                    </Form.Control>
+                                    </select>
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
+                                <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Vendedor</Form.Label>
-                                    <Form.Control as="select" name={"vendedor"}>
-                                        {allVendedores.data.map((vendedor) => (
-                                            <option
-                                                defaultValue={
-                                                    edicion
-                                                        ? ventaEdicion.vendedor
-                                                              .nombre
-                                                        : null
-                                                }
-                                                key={vendedor.id}
-                                            >
-                                                {vendedor.nombre}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
+                                    <input
+                                        disabled
+                                        name="vendedor"
+                                        className="form-control"
+                                        {...register("vendedor", {
+                                            required: true,
+                                        })}
+                                    />
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -200,30 +192,34 @@ export const ModalNuevaVenta = ({
                             productos={allProductos.data}
                             setFilas={setFilas}
                             filas={
-                                edicion ? productosVentaEdicion : rowsProductos
+                                // edicion ? productosVentaEdicion : rowsProductos
+                                rowsProductos
                             }
                             edicion={edicion}
                             row={row}
                         />
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => limpiarDatos()}>
-                        Cerrar
-                    </Button>
-                    <Button
-                        variant="success"
-                        disabled={error}
-                        onClick={() => enviarDatos()}
-                    >
-                        Cargar
-                    </Button>
-                </Modal.Footer>
-                {error && (
-                    <Alert variant="warning" style={{ textAlign: "center" }}>
-                        Faltan completar campos
-                    </Alert>
-                )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="secondary"
+                            onClick={() => limpiarDatos()}
+                        >
+                            Cerrar
+                        </Button>
+                        <input className="btn btn-success" type="submit" />
+                    </Modal.Footer>
+
+                    {errors.cliente && (
+                        <div className="bg-warning text-center p-2">
+                            El cliente es necesario
+                        </div>
+                    )}
+                    {errorApi && (
+                        <div className="bg-warning text-center p-2">
+                            {errorApi}
+                        </div>
+                    )}
+                </form>
             </Modal>
         </div>
     );
