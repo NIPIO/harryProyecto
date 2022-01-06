@@ -17,7 +17,7 @@ class ComprasController extends Controller
     public function index() {
         $compras = Compras::orderBy('id', 'DESC')->with(['proveedor', 'producto'])->get();
 
-        return response()->json(['status' => 200, 'data' => $compras]);
+        return response()->json(['error' => false, 'data' => $compras]);
     }
 
     

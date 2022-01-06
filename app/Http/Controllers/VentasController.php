@@ -17,7 +17,7 @@ class VentasController extends Controller
     public function index() {
         $ventas = Ventas::orderBy('id', 'DESC')->with(['cliente', 'producto', 'vendedor'])->get();
 
-        return response()->json(['status' => 200, 'data' => $ventas]);
+        return response()->json(['error' => false, 'data' => $ventas]);
     }
 
     public function nuevaVenta(Request $request) {
@@ -28,13 +28,13 @@ class VentasController extends Controller
         try {
             foreach ($req['rowsProductos'] as $productoVenta) {
                 $venta = Ventas::create([
-                'cliente_id' => $cliente,
-                'vendedor_id' => $vendedor,
-                'producto_id' => $productoVenta['producto'] + 1,
-                'cantidad' => $productoVenta['cantidad'],
-                'precio_unidad' => $productoVenta['precioUnitario'],
-                'precio_total' => $productoVenta['precioUnitario'] * $productoVenta['cantidad'],
-                'vendedor_comision' => null,
+                    'cliente_id' => $cliente,
+                    'vendedor_id' => $vendedor,
+                    'producto_id' => $productoVenta['producto'] + 1,
+                    'cantidad' => $productoVenta['cantidad'],
+                    'precio_unidad' => $productoVenta['precioUnitario'],
+                    'precio_total' => $productoVenta['precioUnitario'] * $productoVenta['cantidad'],
+                    'vendedor_comision' => null,
                 ]);
                 
                 $venta->save();
@@ -47,19 +47,24 @@ class VentasController extends Controller
 
             }
 
-
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage() . $e->getTraceAsString());
             DB::rollBack();
-            return response()->json(['status' => 500]);
+            throw new \Exception('Ocurrió un error.');
         }
 
-        return response()->json(['status' => 200]);
+        return response()->json(['error' => false]);
     }
 
     public function getVenta(int $id) {
-        $venta = Ventas::whereId($id)->with(['producto'])->first();
-        return response()->json(['status' => 200, 'data' => $venta]);
+
+        try {
+            $venta = Ventas::whereId($id)->with(['producto'])->first();
+    
+        } catch (\Exception $th) {
+            throw new \Exception('Ocurrió un error.');
+        }
+        return response()->json(['error' => false, 'data' => $venta]);
 
     }
 

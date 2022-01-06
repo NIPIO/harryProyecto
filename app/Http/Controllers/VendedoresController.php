@@ -14,22 +14,20 @@ class VendedoresController extends Controller
     public function index() {
         $vendedores = Vendedores::orderBy('id', 'DESC')->get();
 
-        return response()->json(['status' => 200, 'data' => $vendedores]);
+        return response()->json(['error' => false, 'data' => $vendedores]);
     }
 
+    // public function nuevoVendedor(Request $request) {
 
-    public function nuevoVendedor(Request $request) {
+    //     $req = $request->all();
+    //     $vendedor = new Vendedores();
+    //     $vendedor->nombre = $req['nombre'];
+    //     $vendedor->telefono = $req['telefono'];
+    //     $vendedor->email = $req['email'];
+    //     $vendedor->save();
 
-        $req = $request->all();
-dd($req);
-        $vendedor = new Vendedores();
-        $vendedor->nombre = $req['nombre'];
-        $vendedor->telefono = $req['telefono'];
-        $vendedor->email = $req['email'];
-        $vendedor->save();
-
-        return response()->json(['status' => 200]);
-    }
+    //     return response()->json(['status' => 200]);
+    // }
 
     public function borrarVendedor(int $id) {
         $vendedor = Vendedores::whereId($id)->first();

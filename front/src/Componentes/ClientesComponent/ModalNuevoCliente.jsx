@@ -1,6 +1,6 @@
-import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
-import { useState, useRef } from "react";
-
+import { useEffect, useState } from "react";
+import { Button, Modal, Form, Col, Row } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 export const ModalNuevoCliente = ({
     show,
     setModal,
@@ -9,139 +9,149 @@ export const ModalNuevoCliente = ({
     setEdicion,
     clienteEdicion,
 }) => {
-    const [error, setError] = useState(false);
+    const [errorApi, setErrorApi] = useState("");
 
-    const formulario = useRef(null);
-    const form = formulario.current;
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm();
 
     const limpiarDatos = () => {
-        form?.reset();
+        reset();
         setEdicion(false);
-        setError("");
         setModal(false);
     };
 
-    const enviarDatos = () => {
+    const enviarDatos = (data) => {
         let id = edicion ? clienteEdicion.id : null;
-        let nombre = form !== null ? form["nombre"].value : null;
-        let telefono = form !== null ? form["telefono"].value : null;
-        let email = form !== null ? form["email"].value : null;
-
-        let invalido = validate([nombre, telefono, email]);
-
-        if (invalido) {
-            setError("Faltan completar campos");
+        if (edicion) {
+            api.putCliente({ id, ...data })
+                .then((res) => {
+                    if (res.error) {
+                        setErrorApi(res.data);
+                    } else {
+                        setEdicion(false);
+                        setModal(false);
+                        setErrorApi("");
+                    }
+                })
+                .catch((err) => {
+                    setErrorApi(err.response.data.message);
+                });
         } else {
-            setError("");
-            if (edicion) {
-                api.putCliente({ id, nombre, telefono, email })
-                    .then((res) => {
-                        if (res.error) {
-                            setError(res.data);
-                        } else {
-                            setError(false);
-                            setModal(false);
-                            setEdicion(false);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log("error", err);
-                    });
-            } else {
-                api.setNuevoCliente({ nombre, telefono, email })
-                    .then((res) => {
-                        if (res.error) {
-                            setError(res.data);
-                        } else {
-                            setError(false);
-                            setModal(false);
-                            setEdicion(false);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log("error", err);
-                    });
-            }
+            api.setNuevoCliente({ ...data })
+                .then((res) => {
+                    if (res.error) {
+                        setErrorApi(res.data);
+                    } else {
+                        setEdicion(false);
+                        setModal(false);
+                        setErrorApi("");
+                    }
+                })
+                .catch((err) => {
+                    setErrorApi(err.response.data.message);
+                });
         }
     };
 
-    const validate = ([...args]) => {
-        return args.some((arg) => arg === null || arg === "" || arg === 0);
-    };
+    useEffect(() => {
+        if (edicion) {
+            setValue("nombre", clienteEdicion.nombre);
+            setValue("telefono", clienteEdicion.telefono);
+            setValue("email", clienteEdicion.email);
+        } else {
+            setValue("nombre", null);
+            setValue("telefono", null);
+            setValue("email", null);
+        }
+    }, [edicion]);
 
     return (
         <div>
             <Modal size="lg" show={show}>
-                <Modal.Header>
-                    <Modal.Title>
-                        {edicion ? "Editar" : "Nuevo"} Cliente
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form
-                        className="signup-form"
-                        onSubmit={() => enviarDatos}
-                        ref={formulario}
-                        noValidate
-                    >
+                <form onSubmit={handleSubmit(enviarDatos)}>
+                    <Modal.Header>
+                        <Modal.Title>
+                            {edicion ? "Editar" : "Nuevo"} Cliente
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
                                 <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Nombre</Form.Label>
-                                    <Form.Control
-                                        defaultValue={
-                                            edicion
-                                                ? clienteEdicion.nombre
-                                                : null
-                                        }
-                                        name={"nombre"}
+                                    <input
+                                        name="nombre"
+                                        className="form-control"
+                                        {...register("nombre", {
+                                            required: true,
+                                        })}
                                     />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Telefono</Form.Label>
-                                    <Form.Control
-                                        defaultValue={
-                                            edicion
-                                                ? clienteEdicion.telefono
-                                                : null
-                                        }
-                                        name={"telefono"}
+                                    <input
+                                        name="telefono"
+                                        className="form-control"
+                                        {...register("telefono", {
+                                            required: true,
+                                        })}
                                     />
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Row className="mb-3">
-                            <Col md={12} sm={12}>
+                            <Col md={6} sm={12}>
                                 <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control
-                                        defaultValue={
-                                            edicion
-                                                ? clienteEdicion.email
-                                                : null
-                                        }
-                                        name={"email"}
+                                    <input
+                                        name="email"
+                                        className="form-control"
+                                        {...register("email", {
+                                            required: true,
+                                        })}
                                     />
                                 </Form.Group>
                             </Col>
                         </Row>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => limpiarDatos()}>
-                        Cerrar
-                    </Button>
-                    <Button variant="success" onClick={() => enviarDatos()}>
-                        Cargar
-                    </Button>
-                </Modal.Footer>
-                {error && (
-                    <Alert variant="warning" style={{ textAlign: "center" }}>
-                        Faltan completar campos
-                    </Alert>
-                )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="secondary"
+                            onClick={() => limpiarDatos()}
+                        >
+                            Cerrar
+                        </Button>
+                        <input className="btn btn-success" type="submit" />
+                    </Modal.Footer>
+
+                    {errors.nombre && (
+                        <div className="bg-warning text-center p-2">
+                            El nombre es necesario
+                        </div>
+                    )}
+                    {errors.telefono && (
+                        <div className="bg-warning text-center p-2">
+                            El telefono es necesario
+                        </div>
+                    )}
+                    {errors.email && (
+                        <div className="bg-warning text-center p-2">
+                            El email es necesario
+                        </div>
+                    )}
+                    {errorApi && (
+                        <div className="bg-warning text-center p-2">
+                            {errorApi}
+                        </div>
+                    )}
+                </form>
             </Modal>
         </div>
     );

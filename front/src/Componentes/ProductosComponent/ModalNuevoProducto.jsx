@@ -1,13 +1,6 @@
-import { useState, useRef } from "react";
-import {
-    Button,
-    Modal,
-    Form,
-    InputGroup,
-    Col,
-    Row,
-    Alert,
-} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Button, Modal, Form, InputGroup, Col, Row } from "react-bootstrap";
+import { useForm } from "react-hook-form";
 
 export const ModalNuevoProducto = ({
     show,
@@ -18,75 +11,75 @@ export const ModalNuevoProducto = ({
     setEdicion,
     productoEdicion,
 }) => {
-    const [error, setError] = useState("");
+    const [errorApi, setErrorApi] = useState("");
 
-    const formulario = useRef(null);
-    const form = formulario.current;
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm();
 
     const limpiarDatos = () => {
+        reset();
+        setErrorApi("");
         setEdicion(false);
-        setError("");
         setModal(false);
     };
 
-    const enviarDatos = () => {
+    const enviarDatos = (data) => {
         let id = edicion ? productoEdicion.id : null;
-        let nombre = form !== null ? form["nombre"].value : null;
-        let marca = form !== null ? form["marca"].value : null;
-        let stock = form !== null ? form["stock"].value : null;
-        let precio = form !== null ? form["precio"].value : null;
-
-        let invalido = validate([nombre, marca, stock, precio]);
-        if (invalido) {
-            setError("Faltan completar campos");
+        if (edicion) {
+            api.putProducto({ id, ...data })
+                .then((res) => {
+                    if (res.error) {
+                        setErrorApi(res.data);
+                    } else {
+                        setEdicion(false);
+                        setModal(false);
+                        setErrorApi("");
+                    }
+                })
+                .catch((err) => {
+                    setErrorApi(err.response.data.message);
+                });
         } else {
-            setError("");
-            if (edicion) {
-                api.putProducto({ id, nombre, marca, stock, precio })
-                    .then((res) => {
-                        console.log(res);
-                        if (res.error) {
-                            setError(res.data);
-                        } else {
-                            setError(false);
-                            setModal(false);
-                            setEdicion(false);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log("error", err);
-                    });
-            } else {
-                api.setNuevoProducto({ nombre, marca, stock, precio })
-                    .then((res) => {
-                        if (res.error) {
-                            setError(res.data);
-                        } else {
-                            setError(false);
-                            setModal(false);
-                            setEdicion(false);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log("error", err);
-                    });
-            }
+            api.setNuevoProducto({ ...data })
+                .then((res) => {
+                    if (res.error) {
+                        setErrorApi(res.data);
+                    } else {
+                        setEdicion(false);
+                        setModal(false);
+                        setErrorApi("");
+                    }
+                })
+
+                .catch((err) => {
+                    setErrorApi(err.response.data.message);
+                });
         }
     };
 
-    const validate = ([...args]) => {
-        return args.some((arg) => arg === null || arg === "" || arg === 0);
-    };
+    useEffect(() => {
+        if (edicion) {
+            setValue("nombre", productoEdicion.nombre);
+            setValue("marca", productoEdicion.marcas.nombre);
+            setValue("precio", productoEdicion.precio);
+            setValue("stock", productoEdicion.stock);
+        } else {
+            setValue("nombre", null);
+            setValue("marca", null);
+            setValue("precio", null);
+            setValue("stock", null);
+        }
+    }, [edicion]);
 
     return (
         <div>
             <Modal size="lg" show={show}>
-                <Form
-                    className="signup-form"
-                    onSubmit={() => enviarDatos}
-                    ref={formulario}
-                    noValidate
-                >
+                <form onSubmit={handleSubmit(enviarDatos)}>
                     <Modal.Header>
                         <Modal.Title>
                             {edicion ? "Editar" : "Nuevo"} Producto
@@ -95,68 +88,59 @@ export const ModalNuevoProducto = ({
                     <Modal.Body>
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
-                                <Form.Group
-                                    as={Col}
-                                    className="mb-3"
-                                    controlId="formGridAddress1"
-                                >
+                                <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Nombre</Form.Label>
-                                    <Form.Control
-                                        defaultValue={
-                                            edicion
-                                                ? productoEdicion.nombre
-                                                : null
-                                        }
-                                        name={"nombre"}
+                                    <input
+                                        name="nombre"
+                                        className="form-control"
+                                        {...register("nombre", {
+                                            required: true,
+                                        })}
                                     />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
-                                <Form.Group controlId="custom-select">
+                                <Form.Group>
                                     <Form.Label>Marca</Form.Label>
-                                    <Form.Control as="select" name={"marca"}>
-                                        <option value="">Seleccioná</option>
+                                    <select
+                                        name="marca"
+                                        className="form-control"
+                                        {...register("marca", {
+                                            required: true,
+                                        })}
+                                    >
                                         {marcas.map((marca) => (
                                             <option key={marca.id}>
                                                 {marca.nombre}
                                             </option>
                                         ))}
-                                    </Form.Control>
+                                    </select>
                                 </Form.Group>
                             </Col>
                         </Row>
 
                         <Row className="mb-3">
-                            <Form.Group
-                                as={Col}
-                                className="mb-3"
-                                controlId="formGridAddress1"
-                            >
+                            <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Stock</Form.Label>
-                                <Form.Control
-                                    defaultValue={
-                                        edicion ? productoEdicion.stock : null
-                                    }
-                                    name={"stock"}
+                                <input
+                                    name="stock"
+                                    className="form-control"
+                                    {...register("stock", {
+                                        required: true,
+                                    })}
                                 />
                             </Form.Group>
-
-                            <Form.Group
-                                as={Col}
-                                className="mb-3"
-                                controlId="formGridAddress1"
-                            >
+                            <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Precio</Form.Label>
 
                                 <InputGroup className="mb-3">
                                     <InputGroup.Text>$</InputGroup.Text>
-                                    <Form.Control
-                                        defaultValue={
-                                            edicion
-                                                ? productoEdicion.precio
-                                                : null
-                                        }
-                                        name={"precio"}
+                                    <input
+                                        name="precio"
+                                        className="form-control"
+                                        {...register("precio", {
+                                            required: true,
+                                        })}
                                     />
                                 </InputGroup>
                             </Form.Group>
@@ -169,19 +153,35 @@ export const ModalNuevoProducto = ({
                         >
                             Cerrar
                         </Button>
-                        <Button variant="success" onClick={() => enviarDatos()}>
-                            Cargar
-                        </Button>
+                        <input className="btn btn-success" type="submit" />
                     </Modal.Footer>
-                    {error.length > 0 && (
-                        <Alert
-                            variant="warning"
-                            style={{ textAlign: "center" }}
-                        >
-                            {error}
-                        </Alert>
+
+                    {errors.nombre && (
+                        <div className="bg-warning text-center p-2">
+                            El nombre es necesario
+                        </div>
                     )}
-                </Form>
+                    {errors.stock && (
+                        <div className="bg-warning text-center p-2">
+                            El stock es necesario
+                        </div>
+                    )}
+                    {errors.precio && (
+                        <div className="bg-warning text-center p-2">
+                            El precio es necesario
+                        </div>
+                    )}
+                    {errors.marca && (
+                        <div className="bg-warning text-center p-2">
+                            La marca es necesaria
+                        </div>
+                    )}
+                    {errorApi && (
+                        <div className="bg-warning text-center p-2">
+                            {errorApi}
+                        </div>
+                    )}
+                </form>
             </Modal>
         </div>
     );

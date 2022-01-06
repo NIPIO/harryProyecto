@@ -15,7 +15,7 @@ class LoginController extends Controller
             return response()->json(['status' => 401, 'data' => 'No existe el usuario o la contraseña es otra']);
         }
 
-        return response()->json(['status' => 200, 'data' => $usuario]);
+        return response()->json(['error' => false, 'data' => $usuario]);
     }
 
 
@@ -37,7 +37,7 @@ class LoginController extends Controller
 
             $nuevoUsuario->save();
 
-            return response()->json(['status' => 200, 'data' => $nuevoUsuario]);
+            return response()->json(['error' => false, 'data' => $nuevoUsuario]);
 
         } catch (\Throwable $th) {
             return response()->json(['status' => 500, 'data' => 'Ocurrió un error, intentá de nuevo con otro usuario.']);

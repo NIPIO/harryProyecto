@@ -57,7 +57,7 @@ Route::prefix('')->group(function () {
 
     
     Route::get('vendedores', [VendedoresController::class, 'index']);
-    Route::post('vendedor', [VendedoresController::class, 'nuevoVendedor']);
+    // Route::post('vendedor', [VendedoresController::class, 'nuevoVendedor']);
     Route::delete('vendedor/{id}', [VendedoresController::class, 'borrarVendedor']);
     
     Route::get('clientes', [ClientesController::class, 'index']);

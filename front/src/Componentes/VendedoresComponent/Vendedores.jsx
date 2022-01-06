@@ -4,20 +4,10 @@ import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 
-import { ModalNuevoVendedor } from "./ModalNuevoVendedor";
-import {
-    Spinner,
-    Button,
-    Col,
-    Row,
-    Container,
-    Table,
-    Modal,
-} from "react-bootstrap";
+import { Spinner, Button, Row, Container, Table, Modal } from "react-bootstrap";
 
 export const Vendedores = () => {
     const [vendedores, setVendedores] = useState([]);
-    const [modal, setModal] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [venderorDelete, setVenderorDelete] = useState(null);
 
@@ -114,11 +104,6 @@ export const Vendedores = () => {
                         </Row>
                     </Container>
                 </div>
-                {/* <ModalNuevoVendedor
-                    show={modal}
-                    setModal={() => setModal()}
-                    api={api}
-                /> */}
                 <ModalDelete
                     showDelete={showDelete}
                     setShowDelete={setShowDelete}
