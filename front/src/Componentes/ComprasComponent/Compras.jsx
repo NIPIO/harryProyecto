@@ -84,11 +84,11 @@ export const Compras = () => {
                                                 <td>{compra.precio_total}</td>
                                                 <td>{compra.created_at}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                    >
                                                         Editar
-                                                    </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
                                                     </Button>
                                                 </td>
                                             </tr>

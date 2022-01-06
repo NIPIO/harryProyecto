@@ -10,6 +10,8 @@ export const CuentaCorriente = ({ match, history }) => {
     const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
     const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
+    const [edicion, setEdicion] = useState(false);
+    const [cuentaEdicion, setCuentaEdicion] = useState(null);
 
     const allCuentasCorrientes = useQuery("cuentasCorrientes", () =>
         api
@@ -84,11 +86,17 @@ export const CuentaCorriente = ({ match, history }) => {
                                                 <td>{cta.saldo}</td>
                                                 <td>{cta.updated_at}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setCuentaEdicion(
+                                                                cta
+                                                            );
+                                                        }}
+                                                    >
                                                         Editar
-                                                    </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -100,9 +108,12 @@ export const CuentaCorriente = ({ match, history }) => {
                     </Container>
                 </div>
                 <ModalNuevaCtaCte
-                    show={modal}
+                    show={modal || edicion}
                     setModal={() => setModal()}
                     api={api}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    cuentaEdicion={cuentaEdicion}
                     proveedores={proveedores}
                 />
             </div>

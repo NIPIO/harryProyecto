@@ -50,6 +50,11 @@ class MarcasController extends Controller
 
     }
 
-    
+    public function borrarMarca(int $id) {
+        $marca = Marcas::whereId($id)->first();
+        $marca->update(['activo' => $marca['activo'] === 0 ? 1 : 0]);
+        return response()->json(['error' => false]);
+    }
+
     
 }

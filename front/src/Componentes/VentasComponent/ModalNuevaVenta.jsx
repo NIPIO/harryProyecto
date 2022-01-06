@@ -1,15 +1,24 @@
 import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { Spinner, Container } from "react-bootstrap";
 import { TablaNuevaVenta } from "./TablaNuevaVenta";
 
-export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
-    const [cliente, setCliente] = useState(null);
-    const [vendedor, setVendedor] = useState(null);
+export const ModalNuevaVenta = ({
+    show,
+    location,
+    setModal,
+    api,
+    edicion,
+    setEdicion,
+    ventaEdicion,
+}) => {
+    const [error, setError] = useState("");
+    const formulario = useRef(null);
     const [rowsProductos, setFilas] = useState([]);
-    const [error, setError] = useState(false);
+    const [productosVentaEdicion, setProductosVentaEdicion] = useState([]);
+    const form = formulario.current;
 
     let row = {
         producto: "",
@@ -45,49 +54,59 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
             })
     );
 
+    useEffect(() => {
+        if (edicion) {
+            api.getVenta(ventaEdicion.id)
+                .then((res) => setProductosVentaEdicion(res.data))
+                .catch((err) => {
+                    console.log("error", err);
+                });
+        }
+    }, [edicion]);
+
     const limpiarDatos = () => {
-        setCliente(null);
-        setVendedor(null);
+        form?.reset();
+        setEdicion(false);
+        setError("");
         setFilas([]);
-        setError(false);
         setModal(false);
     };
 
     const enviarDatos = () => {
-        api.setNuevaVenta({
-            cliente,
-            vendedor,
-            rowsProductos,
-        })
-            .then((res) => limpiarDatos, setModal(false), setError(false))
-            .catch((err) => {
-                setError(true);
-            });
+        // api.setNuevaVenta({
+        //     cliente,
+        //     vendedor,
+        //     rowsProductos,
+        // })
+        //     .then((res) => limpiarDatos, setModal(false), setError(false))
+        //     .catch((err) => {
+        //         setError(true);
+        //     });
     };
 
-    useEffect(() => {
-        validarRowsProductos(rowsProductos);
-    }, [cliente, vendedor, rowsProductos]);
-
-    const validarRowsProductos = (rowsProductos) => {
-        if (rowsProductos.length === 0) {
-            setError(true);
-            return;
-        }
-        rowsProductos.forEach((arg) => {
-            if (
-                arg.producto === "" ||
-                arg.nombre === "" ||
-                arg.cantidad === "" ||
-                arg.precioUnitario === ""
-            ) {
-                setError(true);
-                return;
-            } else {
-                setError(false);
-            }
-        });
+    const validate = ([...args]) => {
+        return args.some((arg) => arg === null || arg === "" || arg === 0);
     };
+
+    // const validarRowsProductos = (rowsProductos) => {
+    //     if (rowsProductos.length === 0) {
+    //         setError(true);
+    //         return;
+    //     }
+    //     rowsProductos.forEach((arg) => {
+    //         if (
+    //             arg.producto === "" ||
+    //             arg.nombre === "" ||
+    //             arg.cantidad === "" ||
+    //             arg.precioUnitario === ""
+    //         ) {
+    //             setError(true);
+    //             return;
+    //         } else {
+    //             setError(false);
+    //         }
+    //     });
+    // };
 
     if (
         allClientes.isLoading ||
@@ -116,10 +135,17 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
         <div>
             <Modal size="lg" show={show}>
                 <Modal.Header>
-                    <Modal.Title>Nueva Venta</Modal.Title>
+                    <Modal.Title>
+                        {edicion ? "Editar" : "Nueva"} Venta
+                    </Modal.Title>{" "}
                 </Modal.Header>
                 <Modal.Body>
-                    <Form className="signup-form">
+                    <Form
+                        className="signup-form"
+                        onSubmit={() => enviarDatos}
+                        ref={formulario}
+                        noValidate
+                    >
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
                                 <Form.Group
@@ -128,15 +154,15 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Cliente</Form.Label>
-                                    <Form.Control
-                                        onChange={(e) =>
-                                            setCliente(e.target.selectedIndex)
-                                        }
-                                        as="select"
-                                    >
+                                    <Form.Control as="select" name={"cliente"}>
                                         {allClientes.data.map((cliente) => (
                                             <option
-                                                value={cliente.id}
+                                                defaultValue={
+                                                    edicion
+                                                        ? ventaEdicion.cliente
+                                                              .nombre
+                                                        : null
+                                                }
                                                 key={cliente.id}
                                             >
                                                 {cliente.nombre}
@@ -152,15 +178,15 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                                     controlId="formGridAddress1"
                                 >
                                     <Form.Label>Vendedor</Form.Label>
-                                    <Form.Control
-                                        onChange={(e) =>
-                                            setVendedor(e.target.selectedIndex)
-                                        }
-                                        as="select"
-                                    >
+                                    <Form.Control as="select" name={"vendedor"}>
                                         {allVendedores.data.map((vendedor) => (
                                             <option
-                                                value={vendedor.id}
+                                                defaultValue={
+                                                    edicion
+                                                        ? ventaEdicion.vendedor
+                                                              .nombre
+                                                        : null
+                                                }
                                                 key={vendedor.id}
                                             >
                                                 {vendedor.nombre}
@@ -170,11 +196,13 @@ export const ModalNuevaVenta = ({ show, setModal, location, api }) => {
                                 </Form.Group>
                             </Col>
                         </Row>
-
                         <TablaNuevaVenta
                             productos={allProductos.data}
                             setFilas={setFilas}
-                            filas={rowsProductos}
+                            filas={
+                                edicion ? productosVentaEdicion : rowsProductos
+                            }
+                            edicion={edicion}
                             row={row}
                         />
                     </Form>

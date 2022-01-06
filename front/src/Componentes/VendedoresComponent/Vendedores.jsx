@@ -5,11 +5,21 @@ import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 
 import { ModalNuevoVendedor } from "./ModalNuevoVendedor";
-import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import {
+    Spinner,
+    Button,
+    Col,
+    Row,
+    Container,
+    Table,
+    Modal,
+} from "react-bootstrap";
 
 export const Vendedores = () => {
     const [vendedores, setVendedores] = useState([]);
     const [modal, setModal] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [venderorDelete, setVenderorDelete] = useState(null);
 
     const allVendedores = useQuery("vendedores", () =>
         api
@@ -47,14 +57,14 @@ export const Vendedores = () => {
                     <CabeceraBody path={location.pathname} />
                     <Container>
                         <Row>
-                            <Col md={12}>
+                            {/* <Col md={12}>
                                 <Button
                                     variant="success"
                                     onClick={() => setModal(true)}
                                 >
                                     Nuevo Vendedor
                                 </Button>
-                            </Col>
+                            </Col> */}
                         </Row>
                         <Row>
                             <div className="container-fluid text-center">
@@ -78,11 +88,22 @@ export const Vendedores = () => {
                                                 </td>
                                                 <td>¿CANTIDAD VENTAS?</td>
                                                 <td>
-                                                    <Button variant="info">
-                                                        Editar
-                                                    </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
+                                                    <Button
+                                                        onClick={() => {
+                                                            setVenderorDelete(
+                                                                vendedor
+                                                            );
+                                                            setShowDelete(true);
+                                                        }}
+                                                        variant={
+                                                            vendedor.activo
+                                                                ? "primary"
+                                                                : "warning"
+                                                        }
+                                                    >
+                                                        {vendedor.activo
+                                                            ? "Inactivo"
+                                                            : "Activar"}
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -93,12 +114,48 @@ export const Vendedores = () => {
                         </Row>
                     </Container>
                 </div>
-                <ModalNuevoVendedor
+                {/* <ModalNuevoVendedor
                     show={modal}
                     setModal={() => setModal()}
                     api={api}
+                /> */}
+                <ModalDelete
+                    showDelete={showDelete}
+                    setShowDelete={setShowDelete}
+                    vendedor={venderorDelete}
                 />
             </div>
         </>
+    );
+};
+
+export const ModalDelete = ({ showDelete, setShowDelete, vendedor }) => {
+    const modificarEstadoVendedor = () => {
+        api.deleteVendedor(vendedor.id)
+            .then((res) => {
+                setShowDelete(false);
+            })
+            .catch((err) => {
+                console.log("error", err);
+            });
+    };
+    return (
+        <Modal show={showDelete}>
+            <Modal.Body>¿Modificamos este vendedor?</Modal.Body>
+            <Modal.Footer>
+                <Button
+                    onClick={() => setShowDelete(false)}
+                    variant="secondary"
+                >
+                    Cancelar
+                </Button>
+                <Button
+                    onClick={() => modificarEstadoVendedor()}
+                    variant="primary"
+                >
+                    Sí
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };

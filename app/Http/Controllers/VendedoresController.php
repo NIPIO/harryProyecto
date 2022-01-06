@@ -21,7 +21,7 @@ class VendedoresController extends Controller
     public function nuevoVendedor(Request $request) {
 
         $req = $request->all();
-
+dd($req);
         $vendedor = new Vendedores();
         $vendedor->nombre = $req['nombre'];
         $vendedor->telefono = $req['telefono'];
@@ -31,5 +31,9 @@ class VendedoresController extends Controller
         return response()->json(['status' => 200]);
     }
 
-    
+    public function borrarVendedor(int $id) {
+        $vendedor = Vendedores::whereId($id)->first();
+        $vendedor->update(['activo' => $vendedor['activo'] === 0 ? 1 : 0]);
+        return response()->json(['error' => false]);
+    }
 }

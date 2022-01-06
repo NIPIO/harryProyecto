@@ -9,6 +9,8 @@ import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 export const Proveedores = () => {
     const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
+    const [edicion, setEdicion] = useState(false);
+    const [proveedorEdicion, setProveedorEdicion] = useState(null);
 
     const allProveedores = useQuery("proveedores", () =>
         api
@@ -73,11 +75,17 @@ export const Proveedores = () => {
                                                 <td>Otros campos?</td>
                                                 <td>{proveedor.created_at}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setProveedorEdicion(
+                                                                proveedor
+                                                            );
+                                                        }}
+                                                    >
                                                         Editar
-                                                    </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -89,9 +97,12 @@ export const Proveedores = () => {
                     </Container>
                 </div>
                 <ModalNuevoProveedor
-                    show={modal}
+                    show={modal || edicion}
                     setModal={() => setModal()}
                     api={api}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    proveedorEdicion={proveedorEdicion}
                 />
             </div>
         </>

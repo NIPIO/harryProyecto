@@ -4,11 +4,23 @@ import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevaMarca } from "./ModalNuevaMarca";
-import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import {
+    Spinner,
+    Button,
+    Col,
+    Row,
+    Container,
+    Table,
+    Modal,
+} from "react-bootstrap";
 
 export const Marcas = ({ match, history }) => {
     const [marcas, setMarcas] = useState([]);
     const [modal, setModal] = useState(false);
+    const [marcaDelete, setMarcaDelete] = useState(null);
+    const [showDelete, setShowDelete] = useState(false);
+    const [edicion, setEdicion] = useState(false);
+    const [marcaEdicion, setMarcaEdicion] = useState(null);
 
     const allMarcas = useQuery("marcas", () =>
         api
@@ -69,16 +81,39 @@ export const Marcas = ({ match, history }) => {
                                     </thead>
                                     <tbody>
                                         {marcas.map((marca) => (
-                                            <tr>
+                                            <tr key={marca.nombre}>
                                                 <td>{marca.nombre}</td>
                                                 <td>{marca.stock}</td>
                                                 <td>{marca.en_transito}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setMarcaEdicion(
+                                                                marca
+                                                            );
+                                                        }}
+                                                    >
                                                         Editar
                                                     </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
+                                                    <Button
+                                                        onClick={() => {
+                                                            setMarcaDelete(
+                                                                marca
+                                                            );
+                                                            setShowDelete(true);
+                                                        }}
+                                                        variant={
+                                                            marca.activo
+                                                                ? "primary"
+                                                                : "warning"
+                                                        }
+                                                    >
+                                                        {marca.activo
+                                                            ? "Activo"
+                                                            : "Inactivo"}
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -89,12 +124,53 @@ export const Marcas = ({ match, history }) => {
                         </Row>
                     </Container>
                 </div>
+
                 <ModalNuevaMarca
-                    show={modal}
+                    show={modal || edicion}
                     setModal={() => setModal()}
                     api={api}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    marcaEdicion={marcaEdicion}
+                />
+
+                <ModalDelete
+                    showDelete={showDelete}
+                    setShowDelete={setShowDelete}
+                    marca={marcaDelete}
                 />
             </div>
         </>
+    );
+};
+
+export const ModalDelete = ({ showDelete, setShowDelete, marca }) => {
+    const modificarEstadoMarca = () => {
+        api.deleteMarca(marca.id)
+            .then((res) => {
+                setShowDelete(false);
+            })
+            .catch((err) => {
+                console.log("error", err);
+            });
+    };
+    return (
+        <Modal show={showDelete}>
+            <Modal.Body>¿Modificamos este marca?</Modal.Body>
+            <Modal.Footer>
+                <Button
+                    onClick={() => setShowDelete(false)}
+                    variant="secondary"
+                >
+                    Cancelar
+                </Button>
+                <Button
+                    onClick={() => modificarEstadoMarca()}
+                    variant="primary"
+                >
+                    Sí
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };

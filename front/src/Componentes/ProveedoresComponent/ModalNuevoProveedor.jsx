@@ -1,51 +1,85 @@
-import {
-    Button,
-    Modal,
-    Form,
-    InputGroup,
-    Col,
-    Row,
-    FormControl,
-    Alert,
-} from "react-bootstrap";
-import { useState } from "react";
+import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
+import { useState, useRef } from "react";
 
-export const ModalNuevoProveedor = ({ show, setModal, api }) => {
-    const [nombre, setNombre] = useState(null);
+export const ModalNuevoProveedor = ({
+    show,
+    setModal,
+    api,
+    edicion,
+    setEdicion,
+    proveedorEdicion,
+}) => {
     const [error, setError] = useState(false);
 
+    const formulario = useRef(null);
+    const form = formulario.current;
+
     const limpiarDatos = () => {
-        setNombre(null);
+        setEdicion(false);
+        setError("");
         setModal(false);
     };
 
     const enviarDatos = () => {
-        setError(false);
-        validar([nombre]);
-        if (!error) {
-            api.setNuevoProveedor({ nombre })
-                .then((res) => limpiarDatos)
-                .catch((err) => {
-                    console.log("error", err);
-                });
-            // .finally(() => setModal(false));
+        let nombre = form !== null ? form["nombre"].value : null;
+        let id = edicion ? proveedorEdicion.id : null;
+        let invalido = validate([nombre]);
+
+        if (invalido) {
+            setError("Faltan completar campos");
+        } else {
+            setError("");
+            if (edicion) {
+                api.putProveedor({ id, nombre })
+                    .then((res) => {
+                        if (res.error) {
+                            setError(res.data);
+                        } else {
+                            setError("");
+                            setModal(false);
+                            setEdicion(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("error", err);
+                    });
+            } else {
+                api.setNuevoProveedor({ nombre })
+                    .then((res) => {
+                        if (res.error) {
+                            setError(res.data);
+                        } else {
+                            setError("");
+                            setModal(false);
+                            setEdicion(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("error", err);
+                    });
+            }
         }
     };
 
-    const validar = ([...args]) => {
-        args.map((arg) => {
-            if (arg === null) setError(true);
-        });
+    const validate = ([...args]) => {
+        return args.some((arg) => arg === null || arg === "" || arg === 0);
     };
 
     return (
         <div>
             <Modal show={show}>
                 <Modal.Header>
-                    <Modal.Title>Nuevo Proveedor</Modal.Title>
+                    <Modal.Title>
+                        {edicion ? "Editar" : "Nuevo"} Proveedor
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form className="signup-form">
+                    <Form
+                        className="signup-form"
+                        onSubmit={() => enviarDatos}
+                        ref={formulario}
+                        noValidate
+                    >
                         <Row className="mb-3">
                             <Col sm={12}>
                                 <Form.Group
@@ -55,9 +89,12 @@ export const ModalNuevoProveedor = ({ show, setModal, api }) => {
                                 >
                                     <Form.Label>Nombre</Form.Label>
                                     <Form.Control
-                                        onChange={(e) =>
-                                            setNombre(e.target.value)
+                                        defaultValue={
+                                            edicion
+                                                ? proveedorEdicion.nombre
+                                                : null
                                         }
+                                        name={"nombre"}
                                     />
                                 </Form.Group>
                             </Col>
@@ -72,9 +109,9 @@ export const ModalNuevoProveedor = ({ show, setModal, api }) => {
                         Cargar
                     </Button>
                 </Modal.Footer>
-                {error && (
+                {error.length > 0 && (
                     <Alert variant="warning" style={{ textAlign: "center" }}>
-                        Faltan completar campos
+                        {error}
                     </Alert>
                 )}
             </Modal>

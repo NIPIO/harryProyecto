@@ -57,4 +57,10 @@ class VentasController extends Controller
         return response()->json(['status' => 200]);
     }
 
+    public function getVenta(int $id) {
+        $venta = Ventas::whereId($id)->with(['producto'])->first();
+        return response()->json(['status' => 200, 'data' => $venta]);
+
+    }
+
 }

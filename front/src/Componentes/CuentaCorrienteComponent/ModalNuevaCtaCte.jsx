@@ -5,66 +5,115 @@ import {
     InputGroup,
     Col,
     Row,
-    FormControl,
     Alert,
 } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
-export const ModalNuevaCtaCte = ({ show, setModal, api, proveedores }) => {
-    const [nombre, setNombre] = useState(null);
-    const [saldo, setSaldo] = useState(null);
+export const ModalNuevaCtaCte = ({
+    show,
+    setModal,
+    api,
+    edicion,
+    setEdicion,
+    cuentaEdicion,
+    proveedores,
+}) => {
     const [error, setError] = useState(false);
-
+    const formulario = useRef(null);
+    let form = formulario.current;
     const limpiarDatos = () => {
-        setNombre(null);
-        setSaldo(null);
+        setEdicion(false);
+        setError("");
         setModal(false);
+        form?.reset();
     };
 
     const enviarDatos = () => {
-        setError(false);
-        validar([nombre, saldo]);
-        if (!error) {
-            api.setNuevaCtaCte({ nombre, saldo })
-                .then((res) => limpiarDatos)
-                .catch((err) => {
-                    console.log("error", err);
-                })
-                .finally(() => setModal(false));
+        let proveedor = form !== null ? form["proveedor"].value : null;
+        let saldo = form !== null ? form["saldo"].value : null;
+        let id = edicion ? cuentaEdicion.id : null;
+        console.log(proveedor, saldo);
+        let invalido = validate([proveedor, saldo]);
+
+        if (invalido) {
+            setError("Faltan completar campos");
+        } else {
+            setError("");
+            if (edicion) {
+                api.putCtaCte({ proveedor, saldo, id })
+                    .then((res) => {
+                        if (res.error) {
+                            setError(res.data);
+                        } else {
+                            setError("");
+                            setModal(false);
+                            setEdicion(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("error", err);
+                    });
+            } else {
+                api.setNuevaCtaCte({ proveedor, saldo })
+                    .then((res) => {
+                        if (res.error) {
+                            setError(res.data);
+                        } else {
+                            setError("");
+                            setModal(false);
+                            setEdicion(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("error", err);
+                    });
+            }
         }
     };
 
-    const validar = ([...args]) => {
-        args.map((arg) => {
-            if (arg === null) setError(true);
-        });
+    const validate = ([...args]) => {
+        return args.some((arg) => arg === null || arg === "" || arg === 0);
     };
 
     return (
         <div>
             <Modal size="lg" show={show}>
                 <Modal.Header>
-                    <Modal.Title>Nueva Cte Cte</Modal.Title>
+                    <Modal.Title>
+                        {edicion ? "Editar" : "Nueva"} Cuenta Corriente
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form className="signup-form">
+                    <Form
+                        className="signup-form"
+                        onSubmit={() => enviarDatos}
+                        ref={formulario}
+                        noValidate
+                    >
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
-                                <Form.Group controlId="custom-select">
+                                <Form.Group
+                                    as={Col}
+                                    className="mb-3"
+                                    controlId="formGridAddress1"
+                                >
                                     <Form.Label>Proveedor</Form.Label>
                                     <Form.Control
                                         as="select"
-                                        onChange={(e) =>
-                                            setNombre(e.target.selectedIndex)
-                                        }
+                                        name={"proveedor"}
+                                        disabled={edicion}
                                     >
-                                        <option value="">Seleccioná</option>
-                                        {proveedores.map((proveedores) => (
+                                        {proveedores.map((proveedor) => (
                                             <option
-                                                key={proveedores.id}
-                                                defaultValue={proveedores.id}
+                                                defaultValue={
+                                                    edicion
+                                                        ? cuentaEdicion
+                                                              .proveedor.nombre
+                                                        : null
+                                                }
+                                                key={proveedor.id}
                                             >
-                                                {proveedores.nombre}
+                                                {proveedor.nombre}
                                             </option>
                                         ))}
                                     </Form.Control>
@@ -80,11 +129,13 @@ export const ModalNuevaCtaCte = ({ show, setModal, api, proveedores }) => {
 
                                     <InputGroup className="mb-3">
                                         <InputGroup.Text>$</InputGroup.Text>
-                                        <FormControl
-                                            onChange={(e) =>
-                                                setSaldo(e.target.value)
+                                        <Form.Control
+                                            defaultValue={
+                                                edicion
+                                                    ? cuentaEdicion.saldo
+                                                    : null
                                             }
-                                            aria-label="Amount (to the nearest dollar)"
+                                            name={"saldo"}
                                         />
                                     </InputGroup>
                                 </Form.Group>
@@ -94,17 +145,15 @@ export const ModalNuevaCtaCte = ({ show, setModal, api, proveedores }) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => limpiarDatos()}>
-                        {" "}
                         Cerrar
                     </Button>
                     <Button variant="success" onClick={() => enviarDatos()}>
-                        {" "}
                         Cargar
                     </Button>
                 </Modal.Footer>
-                {error && (
+                {error.length > 0 && (
                     <Alert variant="warning" style={{ textAlign: "center" }}>
-                        Faltan completar campos
+                        {error}
                     </Alert>
                 )}
             </Modal>

@@ -4,13 +4,25 @@ import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevoProducto } from "./ModalNuevoProducto";
-import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import {
+    Spinner,
+    Button,
+    Col,
+    Row,
+    Container,
+    Table,
+    Modal,
+} from "react-bootstrap";
 
 export const Productos = () => {
     let location = useLocation();
     const [productos, setProductos] = useState([]);
     const [marcas, setMarcas] = useState([]);
     const [modal, setModal] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [edicion, setEdicion] = useState(false);
+    const [productoEdicion, setProductoEdicion] = useState(null);
+    const [productoDelete, setProductoDelete] = useState(null);
 
     const allMarcas = useQuery(["marcas"], () =>
         api
@@ -80,7 +92,7 @@ export const Productos = () => {
                                     </thead>
                                     <tbody>
                                         {productos.map((producto) => (
-                                            <tr>
+                                            <tr key={producto.nombre}>
                                                 <td>{producto.nombre}</td>
                                                 <td>
                                                     {producto.marcas.nombre}
@@ -89,11 +101,35 @@ export const Productos = () => {
                                                 <td>{producto.stock}</td>
                                                 <td>{producto.en_transito}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setProductoEdicion(
+                                                                producto
+                                                            );
+                                                        }}
+                                                    >
                                                         Editar
                                                     </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
+
+                                                    <Button
+                                                        onClick={() => {
+                                                            setProductoDelete(
+                                                                producto
+                                                            );
+                                                            setShowDelete(true);
+                                                        }}
+                                                        variant={
+                                                            producto.activo
+                                                                ? "primary"
+                                                                : "warning"
+                                                        }
+                                                    >
+                                                        {producto.activo
+                                                            ? "Activo"
+                                                            : "Inactivo"}
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -106,12 +142,52 @@ export const Productos = () => {
                 </div>
 
                 <ModalNuevoProducto
-                    show={modal}
+                    show={modal || edicion}
                     setModal={() => setModal()}
                     marcas={marcas}
                     api={api}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    productoEdicion={productoEdicion}
+                />
+
+                <ModalDelete
+                    showDelete={showDelete}
+                    setShowDelete={setShowDelete}
+                    producto={productoDelete}
                 />
             </div>
         </>
+    );
+};
+
+export const ModalDelete = ({ showDelete, setShowDelete, producto }) => {
+    const modificarEstadoProducto = () => {
+        api.deleteProducto(producto.id)
+            .then((res) => {
+                setShowDelete(false);
+            })
+            .catch((err) => {
+                console.log("error", err);
+            });
+    };
+    return (
+        <Modal show={showDelete}>
+            <Modal.Body>¿Modificamos este producto?</Modal.Body>
+            <Modal.Footer>
+                <Button
+                    onClick={() => setShowDelete(false)}
+                    variant="secondary"
+                >
+                    Cancelar
+                </Button>
+                <Button
+                    onClick={() => modificarEstadoProducto()}
+                    variant="primary"
+                >
+                    Sí
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };

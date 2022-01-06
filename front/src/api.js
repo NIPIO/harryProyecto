@@ -28,6 +28,9 @@ export const api = {
     getVentas: () =>
         client.get(API_PORT + "/api/ventas", {}).then((res) => res.data),
 
+    getVenta: (id) =>
+        client.get(API_PORT + `/api/venta/${id}`, id).then((res) => res.data),
+
     getCompras: () =>
         client.get(API_PORT + "/api/compras", {}).then((res) => res.data),
 
@@ -59,7 +62,47 @@ export const api = {
         client.post(API_PORT + "/api/proveedor", data).then((res) => res.data),
 
     setNuevaCtaCte: (data) =>
-        client.post(API_PORT + "/api/ctacte", data).then((res) => res.data),
+        client
+            .post(API_PORT + "/api/cuentas-corrientes", data)
+            .then((res) => res.data),
+
+    //PUTTERS
+    putProducto: (data) =>
+        client
+            .put(API_PORT + `/api/producto/${data.id}`, data)
+            .then((res) => res.data),
+    putMarca: (data) =>
+        client
+            .put(API_PORT + `/api/marca/${data.id}`, data)
+            .then((res) => res.data),
+    putCliente: (data) =>
+        client
+            .put(API_PORT + `/api/cliente/${data.id}`, data)
+            .then((res) => res.data),
+    putProveedor: (data) =>
+        client
+            .put(API_PORT + `/api/proveedor/${data.id}`, data)
+            .then((res) => res.data),
+    putCtaCte: (data) =>
+        client
+            .put(API_PORT + `/api/cuentas-corrientes/${data.id}`, data)
+            .then((res) => res.data),
+
+    //DELETERS
+    deleteProducto: (id) =>
+        client
+            .delete(API_PORT + `/api/producto/${id}`, id)
+            .then((res) => res.data),
+
+    deleteMarca: (id) =>
+        client
+            .delete(API_PORT + `/api/marca/${id}`, id)
+            .then((res) => res.data),
+
+    deleteVendedor: (id) =>
+        client
+            .delete(API_PORT + `/api/vendedor/${id}`, id)
+            .then((res) => res.data),
 };
 
 export const signin = {

@@ -3,61 +3,14 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
-import { MDBDataTable } from "mdbreact";
 import { ModalNuevaVenta } from "./ModalNuevaVenta";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 
 export const Ventas = ({ match, history }) => {
     const [ventas, setVentas] = useState([]);
     const [modal, setModal] = useState(false);
-
-    const data = {
-        columns: [
-            {
-                label: "Cliente",
-                field: "cliente_id",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Producto",
-                field: "producto_id",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Cantidad",
-                field: "cantidad",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Precio Uni.",
-                field: "precio_unidad",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Precio Total",
-                field: "precio_total",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Vendedor",
-                field: "vendedor_id",
-                width: 100,
-                sort: "asc",
-            },
-            {
-                label: "Fecha",
-                field: "created_at",
-                width: 100,
-                sort: "asc",
-            },
-        ],
-        rows: ventas,
-    };
+    const [ventaEdicion, setVentaEdicion] = useState(null);
+    const [edicion, setEdicion] = useState(false);
 
     const allVentas = useQuery("ventar", () =>
         api
@@ -128,11 +81,17 @@ export const Ventas = ({ match, history }) => {
                                                 <td>{venta.precio_unidad}</td>
                                                 <td>{venta.precio_total}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                        // onClick={() => {
+                                                        //     setEdicion(true);
+                                                        //     setVentaEdicion(
+                                                        //         venta
+                                                        //     );
+                                                        // }}
+                                                    >
                                                         Editar
-                                                    </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -144,10 +103,13 @@ export const Ventas = ({ match, history }) => {
                     </Container>
                 </div>
                 <ModalNuevaVenta
-                    show={modal}
+                    show={modal || edicion}
                     location={location}
                     setModal={() => setModal()}
                     api={api}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    ventaEdicion={ventaEdicion}
                 />
             </div>
         </>

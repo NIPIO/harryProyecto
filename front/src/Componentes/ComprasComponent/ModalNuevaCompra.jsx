@@ -1,14 +1,16 @@
 import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { Spinner, Container } from "react-bootstrap";
 import { TablaNuevaVenta } from "../VentasComponent/TablaNuevaVenta";
+import { useState, useRef, useEffect } from "react";
 
 export const ModalNuevaCompra = ({ show, setModal, location, api }) => {
     const [proveedor, setProveedor] = useState(null);
     const [rowsProductos, setFilas] = useState([]);
     const [error, setError] = useState("");
+    const formulario = useRef(null);
+    let form = formulario.current;
 
     let row = {
         producto: "",
@@ -36,6 +38,7 @@ export const ModalNuevaCompra = ({ show, setModal, location, api }) => {
     );
 
     const limpiarDatos = () => {
+        form?.reset();
         setProveedor(null);
         setFilas([]);
         setError("");

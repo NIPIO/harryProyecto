@@ -35,33 +35,45 @@ Route::get('/', function () {
 
 Route::prefix('')->group(function () {
     Route::get('productos', [ProductosController::class, 'index']);
-    Route::get('ventas', [VentasController::class, 'index']);
-    Route::get('compras', [ComprasController::class, 'index']);
-    Route::get('marcas', [MarcasController::class, 'index']);
-    Route::get('proveedores', [ProveedoresController::class, 'index']);
-    Route::get('vendedores', [VendedoresController::class, 'index']);
-    Route::get('clientes', [ClientesController::class, 'index']);
-    Route::get('cuentas-corrientes', [CtaCteController::class, 'index']);
+    Route::post('producto', [ProductosController::class, 'nuevoProducto']);
+    Route::put('producto/{id}', [ProductosController::class, 'editarProducto']);
+    Route::delete('producto/{id}', [ProductosController::class, 'borrarProducto']);
 
-    // Route::get('usuarios', [AdminController::class, 'index_usuarios'])->middleware(['permiso:Ver usuarios']);
-    // Route::get('usuarios/lista', [AdminController::class, 'getAll']);
-    // Route::get('usuario/{users_with_trashed}', [AdminController::class, 'show_user'])->middleware(['permiso:Ver info de usuario']);
-    // Route::get('rol/{rolID}', [AdminController::class, 'show_rol'])->where('rolID', "\d+")->middleware(['permiso:Ver rol']);
+    Route::get('ventas', [VentasController::class, 'index']);
+    Route::get('venta/{id}', [VentasController::class, 'getVenta']);
+    Route::post('venta', [VentasController::class, 'nuevaVenta']);
+
+    Route::get('compras', [ComprasController::class, 'index']);
+    Route::post('compra', [ComprasController::class, 'nuevaCompra']);
+    
+    Route::get('marcas', [MarcasController::class, 'index']);
+    Route::post('marca', [MarcasController::class, 'nuevaMarca']);
+    Route::put('marca/{id}', [MarcasController::class, 'editarMarca']);
+    Route::delete('marca/{id}', [MarcasController::class, 'borrarMarca']);
+    
+    Route::get('proveedores', [ProveedoresController::class, 'index']);
+    Route::post('proveedor', [ProveedoresController::class, 'nuevoProveedor']);
+    Route::put('proveedor/{id}', [ProveedoresController::class, 'editarProveedor']);
+
+    
+    Route::get('vendedores', [VendedoresController::class, 'index']);
+    Route::post('vendedor', [VendedoresController::class, 'nuevoVendedor']);
+    Route::delete('vendedor/{id}', [VendedoresController::class, 'borrarVendedor']);
+    
+    Route::get('clientes', [ClientesController::class, 'index']);
+    Route::post('cliente', [ClientesController::class, 'nuevoCliente']);
+    Route::put('cliente/{id}', [ClientesController::class, 'editarCliente']);
+    
+    Route::get('cuentas-corrientes', [CtaCteController::class, 'index']);
+    Route::post('cuentas-corrientes', [CtaCteController::class, 'nuevaCtaCte']);
+    Route::put('cuentas-corrientes/{id}', [CtaCteController::class, 'editarCuenta']);
 
     Route::post('login', [LoginController::class, 'login']);
     Route::post('registro', [LoginController::class, 'registro']);
+
     
 
 
 
-    Route::post('producto', [ProductosController::class, 'nuevoProducto']);
-    Route::post('marca', [MarcasController::class, 'nuevaMarca']);
-    Route::post('venta', [VentasController::class, 'nuevaVenta']);
-    Route::post('compra', [ComprasController::class, 'nuevaCompra']);
-    Route::post('cliente', [ClientesController::class, 'nuevoCliente']);
-    Route::post('ctacte', [CtaCteController::class, 'nuevaCtaCte']);
-    Route::post('vendedor', [VendedoresController::class, 'nuevoVendedor']);
-    Route::post('proveedor', [ProveedoresController::class, 'nuevoProveedor']);
-    
 
 });

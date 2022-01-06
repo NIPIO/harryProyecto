@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useRef } from "react";
 import {
     Button,
     Modal,
@@ -6,63 +6,93 @@ import {
     InputGroup,
     Col,
     Row,
-    FormControl,
     Alert,
 } from "react-bootstrap";
 
-export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
-    const [nombre, setNombre] = useState(null);
-    const [marca, setMarca] = useState(null);
-    const [stock, setStock] = useState(null);
-    const [precio, setPrecio] = useState(null);
+export const ModalNuevoProducto = ({
+    show,
+    setModal,
+    marcas,
+    api,
+    edicion,
+    setEdicion,
+    productoEdicion,
+}) => {
     const [error, setError] = useState("");
 
+    const formulario = useRef(null);
+    const form = formulario.current;
+
     const limpiarDatos = () => {
-        setNombre(null);
-        setMarca(null);
-        setStock(null);
-        setPrecio(null);
+        setEdicion(false);
         setError("");
         setModal(false);
     };
 
     const enviarDatos = () => {
-        // api.setNuevoProducto({ nombre, marca, stock, precio })
-        //     .then((res) => {
-        //         if (res.error) {
-        //             setError(true);
-        //         } else {
-        //             setError(false);
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.log("error", err);
-        //     });
-        // .finally(() => setModal(false));
-    };
+        let id = edicion ? productoEdicion.id : null;
+        let nombre = form !== null ? form["nombre"].value : null;
+        let marca = form !== null ? form["marca"].value : null;
+        let stock = form !== null ? form["stock"].value : null;
+        let precio = form !== null ? form["precio"].value : null;
 
-    useEffect(() => {
-        validar([nombre, marca, stock, precio]);
-    }, [nombre, marca, stock, precio]);
-
-    const validar = ([...args]) => {
-        args.forEach((arg) => {
-            if (arg === null || arg === "" || arg === 0) {
-                setError(true);
-                return;
+        let invalido = validate([nombre, marca, stock, precio]);
+        if (invalido) {
+            setError("Faltan completar campos");
+        } else {
+            setError("");
+            if (edicion) {
+                api.putProducto({ id, nombre, marca, stock, precio })
+                    .then((res) => {
+                        console.log(res);
+                        if (res.error) {
+                            setError(res.data);
+                        } else {
+                            setError(false);
+                            setModal(false);
+                            setEdicion(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("error", err);
+                    });
             } else {
-                setError(false);
+                api.setNuevoProducto({ nombre, marca, stock, precio })
+                    .then((res) => {
+                        if (res.error) {
+                            setError(res.data);
+                        } else {
+                            setError(false);
+                            setModal(false);
+                            setEdicion(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log("error", err);
+                    });
             }
-        });
+        }
     };
+
+    const validate = ([...args]) => {
+        return args.some((arg) => arg === null || arg === "" || arg === 0);
+    };
+
     return (
         <div>
             <Modal size="lg" show={show}>
-                <Modal.Header>
-                    <Modal.Title>Nuevo Producto</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form className="signup-form">
+                <Form
+                    className="signup-form"
+                    onSubmit={() => enviarDatos}
+                    ref={formulario}
+                    noValidate
+                >
+                    <Modal.Header>
+                        <Modal.Title>
+                            {edicion ? "Editar" : "Nuevo"} Producto
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
                                 <Form.Group
@@ -72,27 +102,22 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                                 >
                                     <Form.Label>Nombre</Form.Label>
                                     <Form.Control
-                                        onChange={(e) =>
-                                            setNombre(e.target.value)
+                                        defaultValue={
+                                            edicion
+                                                ? productoEdicion.nombre
+                                                : null
                                         }
+                                        name={"nombre"}
                                     />
                                 </Form.Group>
                             </Col>
                             <Col md={6} sm={12}>
                                 <Form.Group controlId="custom-select">
                                     <Form.Label>Marca</Form.Label>
-                                    <Form.Control
-                                        as="select"
-                                        onChange={(e) =>
-                                            setMarca(e.target.selectedIndex)
-                                        }
-                                    >
+                                    <Form.Control as="select" name={"marca"}>
                                         <option value="">Seleccioná</option>
                                         {marcas.map((marca) => (
-                                            <option
-                                                key={marca.id}
-                                                defaultValue={marca.id}
-                                            >
+                                            <option key={marca.id}>
                                                 {marca.nombre}
                                             </option>
                                         ))}
@@ -109,7 +134,10 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                             >
                                 <Form.Label>Stock</Form.Label>
                                 <Form.Control
-                                    onChange={(e) => setStock(e.target.value)}
+                                    defaultValue={
+                                        edicion ? productoEdicion.stock : null
+                                    }
+                                    name={"stock"}
                                 />
                             </Form.Group>
 
@@ -123,32 +151,37 @@ export const ModalNuevoProducto = ({ show, setModal, marcas, api }) => {
                                 <InputGroup className="mb-3">
                                     <InputGroup.Text>$</InputGroup.Text>
                                     <Form.Control
-                                        onChange={(e) =>
-                                            setPrecio(e.target.value)
+                                        defaultValue={
+                                            edicion
+                                                ? productoEdicion.precio
+                                                : null
                                         }
+                                        name={"precio"}
                                     />
                                 </InputGroup>
                             </Form.Group>
                         </Row>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => limpiarDatos()}>
-                        Cerrar
-                    </Button>
-                    <Button
-                        variant="success"
-                        disabled={error}
-                        onClick={() => enviarDatos()}
-                    >
-                        Cargar
-                    </Button>
-                </Modal.Footer>
-                {error && (
-                    <Alert variant="warning" style={{ textAlign: "center" }}>
-                        Faltan completar campos
-                    </Alert>
-                )}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="secondary"
+                            onClick={() => limpiarDatos()}
+                        >
+                            Cerrar
+                        </Button>
+                        <Button variant="success" onClick={() => enviarDatos()}>
+                            Cargar
+                        </Button>
+                    </Modal.Footer>
+                    {error.length > 0 && (
+                        <Alert
+                            variant="warning"
+                            style={{ textAlign: "center" }}
+                        >
+                            {error}
+                        </Alert>
+                    )}
+                </Form>
             </Modal>
         </div>
     );

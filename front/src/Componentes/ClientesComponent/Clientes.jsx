@@ -9,6 +9,8 @@ import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
 export const Clientes = ({ match, history }) => {
     const [clientes, setClientes] = useState([]);
     const [modal, setModal] = useState(false);
+    const [edicion, setEdicion] = useState(false);
+    const [clienteEdicion, setClienteEdicion] = useState(null);
 
     const allClientes = useQuery("clientes", () =>
         api
@@ -76,11 +78,17 @@ export const Clientes = ({ match, history }) => {
                                                 <td>{cliente.telefono}</td>
                                                 <td>{cliente.created_at}</td>
                                                 <td>
-                                                    <Button variant="info">
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-3"
+                                                        onClick={() => {
+                                                            setEdicion(true);
+                                                            setClienteEdicion(
+                                                                cliente
+                                                            );
+                                                        }}
+                                                    >
                                                         Editar
-                                                    </Button>
-                                                    <Button variant="danger">
-                                                        Borrar
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -92,9 +100,12 @@ export const Clientes = ({ match, history }) => {
                     </Container>
                 </div>
                 <ModalNuevoCliente
-                    show={modal}
+                    show={modal || edicion}
                     setModal={() => setModal()}
                     api={api}
+                    edicion={edicion}
+                    setEdicion={setEdicion}
+                    clienteEdicion={clienteEdicion}
                 />
             </div>
         </>

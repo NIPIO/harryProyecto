@@ -23,12 +23,24 @@ class ClientesController extends Controller
 
         $req = $request->all();
 
-        $marca = new Clientes();
-        $marca->nombre = $req['nombre'];
-        $marca->telefono = $req['telefono'];
-        $marca->email = $req['email'];
-        $marca->save();
+        $cliente = new Clientes();
+        $cliente->nombre = $req['nombre'];
+        $cliente->telefono = $req['telefono'];
+        $cliente->email = $req['email'];
+        $cliente->save();
 
         return response()->json(['status' => 200]);
     }
+
+
+    public function editarCliente(Request $request) {
+        $req = $request->all();
+        Clientes::whereId($req['id'])->update([
+            "nombre" => $req['nombre'],
+            "email" => $req['email'],
+            "telefono" => $req['telefono'],
+        ]);
+        return response()->json(['error' => false]);
+    }
+    
 }

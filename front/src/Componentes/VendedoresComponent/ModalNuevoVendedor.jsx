@@ -1,14 +1,5 @@
-import {
-    Button,
-    Modal,
-    Form,
-    InputGroup,
-    Col,
-    Row,
-    FormControl,
-    Alert,
-} from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { Button, Modal, Form, Col, Row, Alert } from "react-bootstrap";
+import { useEffect, useState, useRef } from "react";
 
 export const ModalNuevoVendedor = ({ show, setModal, api }) => {
     const [nombre, setNombre] = useState(null);
@@ -16,7 +7,10 @@ export const ModalNuevoVendedor = ({ show, setModal, api }) => {
     const [email, setEmail] = useState(null);
     const [error, setError] = useState(false);
 
+    const formulario = useRef(null);
+    let form = formulario.current;
     const limpiarDatos = () => {
+        form?.reset();
         setNombre(null);
         setTelefono(null);
         setEmail(null);
@@ -51,7 +45,7 @@ export const ModalNuevoVendedor = ({ show, setModal, api }) => {
         <div>
             <Modal size="lg" show={show}>
                 <Modal.Header>
-                    <Modal.Title>Nuevo Cliente</Modal.Title>
+                    <Modal.Title>Nuevo Vendedor</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form className="signup-form">

@@ -25,7 +25,7 @@ class Vendedores extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nombre', 'email', 'telefono', 'comision', 'created_at', 'updated_at'];
+    protected $fillable = ['nombre', 'email', 'telefono', 'comision', 'created_at', 'updated_at', 'activo'];
 
 
     

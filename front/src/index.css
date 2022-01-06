@@ -12,6 +12,39 @@ code {
         monospace;
 }
 
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:visited,
+.btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:disabled {
+    border-color: white;
+    background-color: #361c33 !important;
+    color: white !important;
+}
+
+.btn-info,
+.btn-info:hover,
+.btn-info:visited,
+.btn-info:focus,
+.btn-info:hover,
+.btn-info:disabled {
+    background-color: #9ae5e6;
+    border-color: #9ae5e6 !important;
+    color: black !important;
+}
+
+.btn-warning,
+.btn-warning:hover,
+.btn-warning:visited,
+.btn-warning:focus,
+.btn-warning:hover,
+.btn-warning:disabled {
+    border-color: #9b5094;
+    background-color: white !important;
+    color: #9b5094 !important;
+}
+
 .btn-success,
 .btn-success:hover,
 .main-sidebar,
@@ -20,7 +53,19 @@ code {
 .btn-success:hover,
 .btn-success:disabled {
     background-color: #210f04;
+    border-color: #210f04 !important;
     color: #ff0000 !important;
+}
+
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:visited,
+.btn-danger:focus,
+.btn-danger:hover,
+.btn-danger:disabled {
+    background-color: #ff0000;
+    border-color: #ff0000 !important;
+    color: black !important;
 }
 
 .main-sidebar a,

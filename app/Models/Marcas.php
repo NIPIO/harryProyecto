@@ -25,7 +25,7 @@ class Marcas extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nombre', 'created_at', 'updated_at'];
+    protected $fillable = ['nombre', 'created_at', 'updated_at', 'activo'];
 
     
     protected $casts = [

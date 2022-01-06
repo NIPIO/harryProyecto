@@ -19,8 +19,11 @@ class ProveedoresController extends Controller
 
 
     public function nuevoProveedor(Request $request) {
-
         $req = $request->all();
+
+        if($this->chequearSiExiste($req['nombre'])){
+                return response()->json(['error' => true, 'data' => 'Existe un proveedor con ese nombre']);
+        }
 
         $proveedor = new Proveedores();
         $proveedor->nombre = $req['nombre'];
@@ -30,4 +33,24 @@ class ProveedoresController extends Controller
     }
 
     
+    public function editarProveedor(Request $request) {
+        $req = $request->all();
+
+        if($this->chequearSiExiste($req['nombre'])){
+            return response()->json(['error' => true, 'data' => 'Existe un proveedor con ese nombre']);
+        }
+
+        Proveedores::whereId($req['id'])->update([
+            "nombre" => $req['nombre'],
+        ]);
+        return response()->json(['error' => false]);
+    }
+
+    public function chequearSiExiste($nombre) {
+        return count(Proveedores::where('nombre', $nombre)->get()->toArray()) > 0;
+    }
+
+    
+   
+
 }

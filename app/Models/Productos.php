@@ -25,7 +25,7 @@ class Productos extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nombre', 'marca', 'precio', 'stock', 'en_transito', 'created_at', 'updated_at'];
+    protected $fillable = ['nombre', 'marca', 'precio', 'stock', 'en_transito', 'created_at', 'updated_at', 'activo'];
 
     
     protected $casts = [
