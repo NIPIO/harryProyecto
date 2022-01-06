@@ -102,8 +102,8 @@ export const Vendedores = () => {
                                                         }
                                                     >
                                                         {vendedor.activo
-                                                            ? "Inactivo"
-                                                            : "Activar"}
+                                                            ? "Activo"
+                                                            : "Inactivo"}
                                                     </Button>
                                                 </td>
                                             </tr>
