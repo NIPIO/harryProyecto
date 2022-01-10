@@ -73,3 +73,14 @@ p,
 i {
     color: #ff0000 !important;
 }
+
+.verticalSplit {
+    border-top: none;
+    border-bottom: none;
+}
+.verticalSplit:first-of-type {
+    border-left: none;
+}
+.verticalSplit:last-of-type {
+    border-right: none;
+}

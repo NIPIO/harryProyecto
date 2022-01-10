@@ -83,7 +83,7 @@ export const ModalNuevaCtaCte = ({
                         <Row className="mb-3">
                             <Col md={6} sm={12}>
                                 <Form.Group>
-                                    <Form.Label>Marca</Form.Label>
+                                    <Form.Label>Proveedor</Form.Label>
                                     <select
                                         name="proveedor"
                                         className="form-control"
@@ -128,7 +128,11 @@ export const ModalNuevaCtaCte = ({
                         >
                             Cerrar
                         </Button>
-                        <input className="btn btn-success" type="submit" />
+                        <input
+                            className="btn btn-success"
+                            type="submit"
+                            value="Guardar"
+                        />
                     </Modal.Footer>
 
                     {errors.proveedor && (

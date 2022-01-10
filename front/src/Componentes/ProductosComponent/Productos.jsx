@@ -84,9 +84,16 @@ export const Productos = () => {
                                         <tr>
                                             <th>Nombre</th>
                                             <th>Marca</th>
+                                            <th>|</th>
                                             <th>Precio</th>
+                                            <th>Costo</th>
+                                            <th>|</th>
                                             <th>Stock</th>
+                                            <th>Reservado</th>
+                                            <th>|</th>
                                             <th>En transito</th>
+                                            <th>Reservado</th>
+                                            <th>|</th>
                                             <th col="2">Acciones</th>
                                         </tr>
                                     </thead>
@@ -97,9 +104,22 @@ export const Productos = () => {
                                                 <td>
                                                     {producto.marcas.nombre}
                                                 </td>
+                                                <td></td>
                                                 <td>{producto.precio}</td>
+                                                <td>{producto.costo}</td>
+                                                <td></td>
                                                 <td>{producto.stock}</td>
+                                                <td>
+                                                    {producto.stock_reservado}
+                                                </td>
+                                                <td></td>
                                                 <td>{producto.en_transito}</td>
+                                                <td>
+                                                    {
+                                                        producto.en_transito_reservado
+                                                    }
+                                                </td>
+                                                <td></td>
                                                 <td>
                                                     <Button
                                                         variant="info"

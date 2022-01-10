@@ -128,7 +128,11 @@ export const ModalNuevoCliente = ({
                         >
                             Cerrar
                         </Button>
-                        <input className="btn btn-success" type="submit" />
+                        <input
+                            className="btn btn-success"
+                            type="submit"
+                            value="Guardar"
+                        />
                     </Modal.Footer>
 
                     {errors.nombre && (

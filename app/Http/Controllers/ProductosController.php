@@ -37,7 +37,10 @@ class ProductosController extends Controller
             $producto->nombre = $req['nombre'];
             $producto->marca = $marca['id'];
             $producto->precio = $req['precio'];
+            $producto->costo = $req['costo'];
             $producto->stock= $req['stock'];
+            $producto->stock_reservado = 0;
+            $producto->en_transito_reservado = 0;
             $producto->save();
     
         } catch (\Exception $th) {
@@ -55,7 +58,8 @@ class ProductosController extends Controller
                 "nombre" => $req['nombre'],
                 "marca" => $marca['id'],
                 "stock" => $req['stock'],
-                "precio" => $req['precio']
+                "precio" => $req['precio'],
+                "costo" => $req['costo']
             ]);
         } catch (\Exception $th) {
             throw new \Exception('Ocurrió un error.');

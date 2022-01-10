@@ -24,10 +24,20 @@ export const ModalNuevaVenta = ({
     vendedor,
 }) => {
     const [clientesSelect, setClientesSelect] = useState([]);
+    const [vendedoresSelect, setVendedoresSelect] = useState([]);
     const allClientes = useQuery("clientes", () =>
         api
             .getClientes()
             .then((res) => setClientesSelect(res.data))
+            .catch((err) => {
+                console.log("error", err);
+            })
+    );
+
+    const allVendedores = useQuery("vendedores", () =>
+        api
+            .getVendedores()
+            .then((res) => setVendedoresSelect(res.data))
             .catch((err) => {
                 console.log("error", err);
             })
@@ -122,10 +132,14 @@ export const ModalNuevaVenta = ({
 
     useEffect(() => {
         setValue("cliente", edicion ? ventaEdicion.cliente : null);
-        setValue("vendedor", vendedor.usuario);
+        setValue("vendedor", edicion ? ventaEdicion.usuario : null);
     }, [edicion]);
 
-    if (allClientes.isLoading || allProductos.isLoading) {
+    if (
+        allClientes.isLoading ||
+        allProductos.isLoading ||
+        allVendedores.isLoading
+    ) {
         return (
             <div>
                 <div className="content-wrapper">
@@ -177,14 +191,19 @@ export const ModalNuevaVenta = ({
                             <Col md={6} sm={12}>
                                 <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Vendedor</Form.Label>
-                                    <input
-                                        disabled
-                                        name="vendedor"
+                                    <select
+                                        name="cliente"
                                         className="form-control"
                                         {...register("vendedor", {
                                             required: true,
                                         })}
-                                    />
+                                    >
+                                        {vendedoresSelect.map((vendedor) => (
+                                            <option key={vendedor.id}>
+                                                {vendedor.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -206,7 +225,11 @@ export const ModalNuevaVenta = ({
                         >
                             Cerrar
                         </Button>
-                        <input className="btn btn-success" type="submit" />
+                        <input
+                            className="btn btn-success"
+                            type="submit"
+                            value="Guardar"
+                        />
                     </Modal.Footer>
 
                     {errors.cliente && (

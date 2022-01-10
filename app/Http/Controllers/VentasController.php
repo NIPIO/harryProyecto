@@ -31,20 +31,21 @@ class VentasController extends Controller
         DB::beginTransaction();
         try {
             foreach ($req['rowsProductos'] as $productoVenta) {
+                $producto = Productos::where('nombre', $productoVenta['nombre'])->first();
+
                 $venta = Ventas::create([
                     'cliente_id' => $cliente['id'],
                     'vendedor_id' => $vendedor['id'],
-                    'producto_id' => $productoVenta['producto'] + 1,
+                    'producto_id' => $producto['id'],
                     'cantidad' => $productoVenta['cantidad'],
                     'precio_unidad' => $productoVenta['precioUnitario'],
                     'precio_total' => $productoVenta['precioUnitario'] * $productoVenta['cantidad'],
-                    'vendedor_comision' => null,
+                    'vendedor_comision' => ($productoVenta['precioUnitario'] * $productoVenta['cantidad']) * 0.01 ,
                 ]);
                 
                 $venta->save();
 
-                $producto = Productos::find($productoVenta['producto'] + 1);
-                $producto->update(['stock' => $producto->stock - $productoVenta['cantidad']]);
+                $producto->update(['stock_reservado' => $producto->stock_reservado + $productoVenta['cantidad']]);
 
                 $producto->save();
                 DB::commit();

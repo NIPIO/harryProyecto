@@ -87,7 +87,7 @@ export const ModalNuevoProducto = ({
                     </Modal.Header>
                     <Modal.Body>
                         <Row className="mb-3">
-                            <Col md={6} sm={12}>
+                            <Col md={4} sm={12}>
                                 <Form.Group as={Col} className="mb-3">
                                     <Form.Label>Nombre</Form.Label>
                                     <input
@@ -99,7 +99,7 @@ export const ModalNuevoProducto = ({
                                     />
                                 </Form.Group>
                             </Col>
-                            <Col md={6} sm={12}>
+                            <Col md={4} sm={12}>
                                 <Form.Group>
                                     <Form.Label>Marca</Form.Label>
                                     <select
@@ -117,33 +117,53 @@ export const ModalNuevoProducto = ({
                                     </select>
                                 </Form.Group>
                             </Col>
-                        </Row>
-
-                        <Row className="mb-3">
-                            <Form.Group as={Col} className="mb-3">
-                                <Form.Label>Stock</Form.Label>
-                                <input
-                                    name="stock"
-                                    className="form-control"
-                                    {...register("stock", {
-                                        required: true,
-                                    })}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Col} className="mb-3">
-                                <Form.Label>Precio</Form.Label>
-
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text>$</InputGroup.Text>
+                            <Col md={4} sm={12}>
+                                <Form.Group as={Col} className="mb-3">
+                                    <Form.Label>Stock</Form.Label>
                                     <input
-                                        name="precio"
+                                        name="stock"
                                         className="form-control"
-                                        {...register("precio", {
+                                        {...register("stock", {
                                             required: true,
                                         })}
                                     />
-                                </InputGroup>
-                            </Form.Group>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                            <Col md={6} sm={12}>
+                                <Form.Group as={Col} className="mb-3">
+                                    <Form.Label>Precio</Form.Label>
+
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>$</InputGroup.Text>
+                                        <input
+                                            name="precio"
+                                            className="form-control"
+                                            {...register("precio", {
+                                                required: true,
+                                            })}
+                                        />
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
+                            <Col md={6} sm={12}>
+                                <Form.Group as={Col} className="mb-3">
+                                    <Form.Label>Costo</Form.Label>
+
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text>$</InputGroup.Text>
+                                        <input
+                                            name="costo"
+                                            className="form-control"
+                                            {...register("costo", {
+                                                required: true,
+                                            })}
+                                        />
+                                    </InputGroup>
+                                </Form.Group>
+                            </Col>
                         </Row>
                     </Modal.Body>
                     <Modal.Footer>
@@ -153,7 +173,11 @@ export const ModalNuevoProducto = ({
                         >
                             Cerrar
                         </Button>
-                        <input className="btn btn-success" type="submit" />
+                        <input
+                            className="btn btn-success"
+                            type="submit"
+                            value="Guardar"
+                        />
                     </Modal.Footer>
 
                     {errors.nombre && (

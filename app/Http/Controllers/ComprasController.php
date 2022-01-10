@@ -40,7 +40,7 @@ class ComprasController extends Controller
                 $venta->save();
 
                 $producto = Productos::find($productoCompra['producto'] + 1);
-                $producto->update(['stock' => $producto->stock - $productoCompra['cantidad']]);
+                $producto->update(['stock_reservado' => $producto->stock_reservado + $productoCompra['cantidad']]);
 
                 $producto->save();
                 DB::commit();
