@@ -5,20 +5,14 @@ import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 
 import { Spinner, Button, Row, Container, Table, Modal } from "react-bootstrap";
+import { useVendedores } from "../../apiCalls";
 
 export const Vendedores = () => {
     const [vendedores, setVendedores] = useState([]);
     const [showDelete, setShowDelete] = useState(false);
     const [venderorDelete, setVenderorDelete] = useState(null);
 
-    const allVendedores = useQuery("vendedores", () =>
-        api
-            .getVendedores()
-            .then((res) => setVendedores(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
+    const allVendedores = useVendedores();
     let location = useLocation();
 
     if (allVendedores.isLoading) {

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vendedores extends Model
+class VentasDetalle extends Model
 {
     use HasFactory;
     /**
@@ -13,7 +13,7 @@ class Vendedores extends Model
      *
      * @var string
      */
-    protected $table = 'vendedores';
+    protected $table = 'ventas_detalle';
 
     /**
      * The primary key for the model.
@@ -25,13 +25,12 @@ class Vendedores extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nombre', 'email', 'telefono', 'comision', 'created_at', 'updated_at', 'activo'];
+    protected $fillable = ['venta_id', 'producto_id', 'precio', 'cantidad'];
 
-    
     protected $casts = [
-        'created_at'  => 'datetime:d-m-Y',
-        'updated_at'  => 'datetime:d-m-Y',
+        'fecha_venta'  => 'datetime:d-m-Y',
     ];
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -39,7 +38,15 @@ class Vendedores extends Model
      */
     public $timestamps = true;
 
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    public function venta()
+    {
+        return $this->belongsTo(Ventas::class, 'venta_id', 'id');
+    }
+
+    public function producto()
+    {
+        return $this->belongsTo(Productos::class, 'producto_id', 'id');
+    }
 
 }
+

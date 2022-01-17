@@ -5,35 +5,17 @@ import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevaCtaCte } from "./ModalNuevaCtaCte";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import { useCuentas, useProveedores } from "../../apiCalls";
 
 export const CuentaCorriente = ({ match, history }) => {
-    const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
-    const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
     const [edicion, setEdicion] = useState(false);
     const [cuentaEdicion, setCuentaEdicion] = useState(null);
-
-    const allCuentasCorrientes = useQuery("cuentasCorrientes", () =>
-        api
-            .getCuentasCorrientes()
-            .then((res) => setCuentasCorrientes(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
-
-    const allProveedores = useQuery("proveedores", () =>
-        api
-            .getProveedores()
-            .then((res) => setProveedores(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
-
     let location = useLocation();
+    const allCuentas = useCuentas();
+    const allProveedores = useProveedores();
 
-    if (allCuentasCorrientes.isLoading || allProveedores.isLoading) {
+    if (allCuentas.isLoading || allProveedores.isLoading) {
         return (
             <div>
                 <div className="content-wrapper">
@@ -80,7 +62,7 @@ export const CuentaCorriente = ({ match, history }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {cuentasCorrientes.map((cta) => (
+                                        {allCuentas.data.data.map((cta) => (
                                             <tr>
                                                 <td>{cta.proveedor.nombre}</td>
                                                 <td>{cta.saldo}</td>
@@ -88,7 +70,6 @@ export const CuentaCorriente = ({ match, history }) => {
                                                 <td>
                                                     <Button
                                                         variant="info"
-                                                        className="mx-3"
                                                         onClick={() => {
                                                             setEdicion(true);
                                                             setCuentaEdicion(
@@ -114,7 +95,7 @@ export const CuentaCorriente = ({ match, history }) => {
                     edicion={edicion}
                     setEdicion={setEdicion}
                     cuentaEdicion={cuentaEdicion}
-                    proveedores={proveedores}
+                    proveedores={allProveedores.data.data}
                 />
             </div>
         </>

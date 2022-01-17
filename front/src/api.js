@@ -28,6 +28,11 @@ export const api = {
     getVentas: () =>
         client.get(API_PORT + "/api/ventas", {}).then((res) => res.data),
 
+    getVentasByFilter: (filtros) =>
+        client
+            .get(API_PORT + "/api/ventasByFilter", { params: filtros })
+            .then((res) => res.data),
+
     getVenta: (id) =>
         client.get(API_PORT + `/api/venta/${id}`, id).then((res) => res.data),
 

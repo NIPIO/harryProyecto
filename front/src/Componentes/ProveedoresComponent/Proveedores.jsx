@@ -1,26 +1,17 @@
 import { api } from "../../api";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevoProveedor } from "./ModalNuevoProveedor";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import { useProveedores } from "../../apiCalls";
 
 export const Proveedores = () => {
-    const [proveedores, setProveedores] = useState([]);
     const [modal, setModal] = useState(false);
     const [edicion, setEdicion] = useState(false);
     const [proveedorEdicion, setProveedorEdicion] = useState(null);
-
-    const allProveedores = useQuery("proveedores", () =>
-        api
-            .getProveedores()
-            .then((res) => setProveedores(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
     let location = useLocation();
+    const allProveedores = useProveedores();
 
     if (allProveedores.isLoading) {
         return (
@@ -69,27 +60,32 @@ export const Proveedores = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {proveedores.map((proveedor) => (
-                                            <tr>
-                                                <td>{proveedor.nombre}</td>
-                                                <td>Otros campos?</td>
-                                                <td>{proveedor.created_at}</td>
-                                                <td>
-                                                    <Button
-                                                        variant="info"
-                                                        className="mx-3"
-                                                        onClick={() => {
-                                                            setEdicion(true);
-                                                            setProveedorEdicion(
-                                                                proveedor
-                                                            );
-                                                        }}
-                                                    >
-                                                        Editar
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {allProveedores.data.data.map(
+                                            (proveedor) => (
+                                                <tr>
+                                                    <td>{proveedor.nombre}</td>
+                                                    <td>Otros campos?</td>
+                                                    <td>
+                                                        {proveedor.created_at}
+                                                    </td>
+                                                    <td>
+                                                        <Button
+                                                            variant="info"
+                                                            onClick={() => {
+                                                                setEdicion(
+                                                                    true
+                                                                );
+                                                                setProveedorEdicion(
+                                                                    proveedor
+                                                                );
+                                                            }}
+                                                        >
+                                                            Editar
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )}
                                     </tbody>
                                 </Table>
                             </div>

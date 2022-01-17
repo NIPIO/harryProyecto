@@ -21,7 +21,6 @@ export const ModalNuevaVenta = ({
     edicion,
     setEdicion,
     ventaEdicion,
-    vendedor,
 }) => {
     const [clientesSelect, setClientesSelect] = useState([]);
     const [vendedoresSelect, setVendedoresSelect] = useState([]);
@@ -169,7 +168,6 @@ export const ModalNuevaVenta = ({
                     </Modal.Header>
                     <Modal.Body>
                         <Row className="mb-3">
-                            {console.log(ventaEdicion)}
                             <Col md={6} sm={12}>
                                 <Form.Group>
                                     <Form.Label>Cliente</Form.Label>

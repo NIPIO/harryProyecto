@@ -14,10 +14,18 @@ class ProductosController extends Controller
     }
 
     public function index() {
-        $productos = Productos::with('marcas')->get();
-        $productos = Productos::orderBy('id', 'ASC')->with(['marcas'])->get();
+        $producto = request()->get('producto');
+        $marca = request()->get('marca');
+        $productos = Productos::orderBy('id', 'ASC')->with(['marcas']);
 
-        return response()->json(['error' => false, 'data' => $productos]);
+        if ($producto) {
+            $productos->whereId((int) $producto);
+        }
+        if ($marca) {
+            $productos->whereMarca([(int) $marca]);
+        }
+        
+        return response()->json(['error' => false, 'allProductos' => Productos::all(), 'productosFiltro' => $productos->get()]);
     }
 
 

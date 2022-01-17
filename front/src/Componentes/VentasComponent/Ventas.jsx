@@ -1,34 +1,47 @@
 import { api } from "../../api";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
+import { Filtros } from "../../Comun/Filtros";
 import { useState, useEffect } from "react";
 import { ModalNuevaVenta } from "./ModalNuevaVenta";
+import { ModalVerVenta } from "./ModalVerVenta";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import {
+    useClientes,
+    useVendedores,
+    useProductos,
+    useVentas,
+} from "../../apiCalls";
+import { useQuery } from "react-query";
 
-export const Ventas = ({ match, history }) => {
+export const Ventas = () => {
     const [ventas, setVentas] = useState([]);
+    // const [error, setError] = useState("");
     const [modal, setModal] = useState(false);
+
     const [ventaEdicion, setVentaEdicion] = useState(null);
     const [edicion, setEdicion] = useState(false);
-    const [vendedor, setVendedor] = useState(null);
+    const [verVenta, setVerVenta] = useState(false);
+    const [detalleVenta, setDetalleVenta] = useState(null);
 
-    const allVentas = useQuery("ventar", () =>
-        api
-            .getVentas()
-            .then((res) => setVentas(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
+    // const [vendedor, setVendedor] = useState(null);
     let location = useLocation();
 
-    useEffect(() => {
-        setVendedor(JSON.parse(localStorage.getItem("logueado")));
-        console.log(vendedor);
-    }, []);
+    const allVentas = useVentas();
+    const allClientes = useClientes();
+    const allVendedores = useVendedores();
+    const allProductos = useProductos();
 
-    if (allVentas.isLoading) {
+    useEffect(() => {
+        if (!allVentas.isLoading) setVentas(allVentas.data.data);
+    }, [allVentas.isLoading]);
+
+    if (
+        allVentas.isLoading ||
+        allClientes.isLoading ||
+        allVendedores.isLoading ||
+        allProductos.isLoading
+    ) {
         return (
             <div>
                 <div className="content-wrapper">
@@ -63,41 +76,64 @@ export const Ventas = ({ match, history }) => {
                                 </Button>
                             </Col>
                         </Row>
+                        <Row className="my-2 mx-1">
+                            <Filtros
+                                clientes={allClientes}
+                                vendedores={allVendedores}
+                                productos={allProductos}
+                            />
+                        </Row>
                         <Row>
                             <div className="container-fluid text-center">
                                 <Table responsive>
                                     <thead>
                                         <tr>
+                                            <th>Nro</th>
                                             <th>Cliente</th>
                                             <th>Vendedor</th>
-                                            <th>Producto</th>
                                             <th>Cantidad</th>
-                                            <th>Precio U.</th>
                                             <th>Precio Total</th>
+                                            <th>Fecha</th>
+
                                             <th col="2">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {ventas.map((venta) => (
-                                            <tr>
+                                            <tr key={venta.id}>
+                                                <td>{venta.id}</td>
                                                 <td>{venta.cliente.nombre}</td>
                                                 <td>{venta.vendedor.nombre}</td>
-                                                <td>{venta.producto.nombre}</td>
                                                 <td>{venta.cantidad}</td>
-                                                <td>{venta.precio_unidad}</td>
                                                 <td>{venta.precio_total}</td>
+                                                <td>{venta.fecha_venta}</td>
                                                 <td>
                                                     <Button
                                                         variant="info"
-                                                        className="mx-3"
-                                                        onClick={() => {
-                                                            setEdicion(true);
-                                                            setVentaEdicion(
-                                                                venta
-                                                            );
-                                                        }}
+                                                        className="mx-1"
+
+                                                        // onClick={() => {
+                                                        //     setEdicion(
+                                                        //         true
+                                                        //     );
+                                                        //     setProveedorEdicion(
+                                                        //         proveedor
+                                                        //     );
+                                                        // }}
                                                     >
                                                         Editar
+                                                    </Button>
+                                                    <Button
+                                                        variant="info"
+                                                        className="mx-1"
+                                                        onClick={() => {
+                                                            setDetalleVenta(
+                                                                venta.id
+                                                            );
+                                                            setVerVenta(true);
+                                                        }}
+                                                    >
+                                                        Ver
                                                     </Button>
                                                 </td>
                                             </tr>
@@ -116,7 +152,12 @@ export const Ventas = ({ match, history }) => {
                     edicion={edicion}
                     setEdicion={setEdicion}
                     ventaEdicion={ventaEdicion}
-                    vendedor={vendedor}
+                />
+
+                <ModalVerVenta
+                    show={verVenta}
+                    setVerVenta={() => setVerVenta()}
+                    ventaId={detalleVenta}
                 />
             </div>
         </>

@@ -1,27 +1,17 @@
 import { api } from "../../api";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevoCliente } from "./ModalNuevoCliente";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import { useClientes } from "../../apiCalls";
 
 export const Clientes = ({ match, history }) => {
-    const [clientes, setClientes] = useState([]);
     const [modal, setModal] = useState(false);
     const [edicion, setEdicion] = useState(false);
     const [clienteEdicion, setClienteEdicion] = useState(null);
-
-    const allClientes = useQuery("clientes", () =>
-        api
-            .getClientes()
-            .then((res) => setClientes(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
-
     let location = useLocation();
+    const allClientes = useClientes();
 
     if (allClientes.isLoading) {
         return (
@@ -71,28 +61,33 @@ export const Clientes = ({ match, history }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {clientes.map((cliente) => (
-                                            <tr>
-                                                <td>{cliente.nombre}</td>
-                                                <td>{cliente.email}</td>
-                                                <td>{cliente.telefono}</td>
-                                                <td>{cliente.created_at}</td>
-                                                <td>
-                                                    <Button
-                                                        variant="info"
-                                                        className="mx-3"
-                                                        onClick={() => {
-                                                            setEdicion(true);
-                                                            setClienteEdicion(
-                                                                cliente
-                                                            );
-                                                        }}
-                                                    >
-                                                        Editar
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {allClientes.data.data.map(
+                                            (cliente) => (
+                                                <tr>
+                                                    <td>{cliente.nombre}</td>
+                                                    <td>{cliente.email}</td>
+                                                    <td>{cliente.telefono}</td>
+                                                    <td>
+                                                        {cliente.created_at}
+                                                    </td>
+                                                    <td>
+                                                        <Button
+                                                            variant="info"
+                                                            onClick={() => {
+                                                                setEdicion(
+                                                                    true
+                                                                );
+                                                                setClienteEdicion(
+                                                                    cliente
+                                                                );
+                                                            }}
+                                                        >
+                                                            Editar
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )}
                                     </tbody>
                                 </Table>
                             </div>

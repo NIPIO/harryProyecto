@@ -1,27 +1,18 @@
 import { api } from "../../api";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevaCompra } from "./ModalNuevaCompra";
 import { Spinner, Button, Col, Row, Container, Table } from "react-bootstrap";
+import { useCompras } from "../../apiCalls";
 
 export const Compras = () => {
-    const [compras, setCompras] = useState([]);
     const [modal, setModal] = useState(false);
     const [compraEdicion, setCompraEdicion] = useState(null);
     const [edicion, setEdicion] = useState(false);
-
-    const allCompras = useQuery("compras", () =>
-        api
-            .getCompras()
-            .then((res) => setCompras(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
-
     let location = useLocation();
+
+    const allCompras = useCompras();
 
     if (allCompras.isLoading) {
         return (
@@ -73,7 +64,7 @@ export const Compras = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {compras.map((compra) => (
+                                        {allCompras.data.data.map((compra) => (
                                             <tr>
                                                 <td>
                                                     {compra.proveedor.nombre}
@@ -88,7 +79,6 @@ export const Compras = () => {
                                                 <td>
                                                     <Button
                                                         variant="info"
-                                                        className="mx-3"
                                                         onClick={() => {
                                                             setEdicion(true);
                                                             setCompraEdicion(

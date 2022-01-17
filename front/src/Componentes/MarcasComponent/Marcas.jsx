@@ -13,6 +13,7 @@ import {
     Table,
     Modal,
 } from "react-bootstrap";
+import { useMarcas } from "../../apiCalls";
 
 export const Marcas = ({ match, history }) => {
     const [marcas, setMarcas] = useState([]);
@@ -21,17 +22,8 @@ export const Marcas = ({ match, history }) => {
     const [showDelete, setShowDelete] = useState(false);
     const [edicion, setEdicion] = useState(false);
     const [marcaEdicion, setMarcaEdicion] = useState(null);
-
-    const allMarcas = useQuery("marcas", () =>
-        api
-            .getMarcas()
-            .then((res) => setMarcas(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
-
     let location = useLocation();
+    const allMarcas = useMarcas();
 
     if (allMarcas.isLoading) {
         return (
@@ -80,7 +72,7 @@ export const Marcas = ({ match, history }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {marcas.map((marca) => (
+                                        {allMarcas.data.data.map((marca) => (
                                             <tr key={marca.nombre}>
                                                 <td>{marca.nombre}</td>
                                                 <td>{marca.stock}</td>
@@ -88,7 +80,7 @@ export const Marcas = ({ match, history }) => {
                                                 <td>
                                                     <Button
                                                         variant="info"
-                                                        className="mx-3"
+                                                        className="mx-1"
                                                         onClick={() => {
                                                             setEdicion(true);
                                                             setMarcaEdicion(

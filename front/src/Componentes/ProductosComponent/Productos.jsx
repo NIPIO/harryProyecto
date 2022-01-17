@@ -1,9 +1,10 @@
 import { api } from "../../api";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { CabeceraBody } from "../../Comun/CabeceraBody";
 import { useState } from "react";
 import { ModalNuevoProducto } from "./ModalNuevoProducto";
+import { useMarcas, useProductos } from "../../apiCalls";
+
 import {
     Spinner,
     Button,
@@ -16,31 +17,14 @@ import {
 
 export const Productos = () => {
     let location = useLocation();
-    const [productos, setProductos] = useState([]);
-    const [marcas, setMarcas] = useState([]);
     const [modal, setModal] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [edicion, setEdicion] = useState(false);
     const [productoEdicion, setProductoEdicion] = useState(null);
     const [productoDelete, setProductoDelete] = useState(null);
 
-    const allMarcas = useQuery(["marcas"], () =>
-        api
-            .getMarcas()
-            .then((res) => setMarcas(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
-
-    const allProductos = useQuery("productos", () =>
-        api
-            .getProductos()
-            .then((res) => setProductos(res.data))
-            .catch((err) => {
-                console.log("error", err);
-            })
-    );
+    const allMarcas = useMarcas();
+    const allProductos = useProductos();
 
     if (allProductos.isLoading || allMarcas.isLoading) {
         return (
@@ -98,62 +82,71 @@ export const Productos = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {productos.map((producto) => (
-                                            <tr key={producto.nombre}>
-                                                <td>{producto.nombre}</td>
-                                                <td>
-                                                    {producto.marcas.nombre}
-                                                </td>
-                                                <td></td>
-                                                <td>{producto.precio}</td>
-                                                <td>{producto.costo}</td>
-                                                <td></td>
-                                                <td>{producto.stock}</td>
-                                                <td>
-                                                    {producto.stock_reservado}
-                                                </td>
-                                                <td></td>
-                                                <td>{producto.en_transito}</td>
-                                                <td>
-                                                    {
-                                                        producto.en_transito_reservado
-                                                    }
-                                                </td>
-                                                <td></td>
-                                                <td>
-                                                    <Button
-                                                        variant="info"
-                                                        className="mx-3"
-                                                        onClick={() => {
-                                                            setEdicion(true);
-                                                            setProductoEdicion(
-                                                                producto
-                                                            );
-                                                        }}
-                                                    >
-                                                        Editar
-                                                    </Button>
-
-                                                    <Button
-                                                        onClick={() => {
-                                                            setProductoDelete(
-                                                                producto
-                                                            );
-                                                            setShowDelete(true);
-                                                        }}
-                                                        variant={
-                                                            producto.activo
-                                                                ? "primary"
-                                                                : "warning"
+                                        {allProductos.data.data.map(
+                                            (producto) => (
+                                                <tr key={producto.nombre}>
+                                                    <td>{producto.nombre}</td>
+                                                    <td>
+                                                        {producto.marcas.nombre}
+                                                    </td>
+                                                    <td></td>
+                                                    <td>{producto.precio}</td>
+                                                    <td>{producto.costo}</td>
+                                                    <td></td>
+                                                    <td>{producto.stock}</td>
+                                                    <td>
+                                                        {
+                                                            producto.stock_reservado
                                                         }
-                                                    >
-                                                        {producto.activo
-                                                            ? "Activo"
-                                                            : "Inactivo"}
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        {producto.en_transito}
+                                                    </td>
+                                                    <td>
+                                                        {
+                                                            producto.en_transito_reservado
+                                                        }
+                                                    </td>
+                                                    <td></td>
+                                                    <td>
+                                                        <Button
+                                                            variant="info"
+                                                            onClick={() => {
+                                                                setEdicion(
+                                                                    true
+                                                                );
+                                                                setProductoEdicion(
+                                                                    producto
+                                                                );
+                                                            }}
+                                                        >
+                                                            Editar
+                                                        </Button>
+
+                                                        <Button
+                                                            onClick={() => {
+                                                                setProductoDelete(
+                                                                    producto
+                                                                );
+                                                                setShowDelete(
+                                                                    true
+                                                                );
+                                                            }}
+                                                            variant={
+                                                                producto.activo
+                                                                    ? "primary"
+                                                                    : "warning"
+                                                            }
+                                                        >
+                                                            {producto.activo
+                                                                ? "Activo"
+                                                                : "Inactivo"}
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )}
                                     </tbody>
                                 </Table>
                             </div>
@@ -164,7 +157,7 @@ export const Productos = () => {
                 <ModalNuevoProducto
                     show={modal || edicion}
                     setModal={() => setModal()}
-                    marcas={marcas}
+                    marcas={allMarcas.data.data}
                     api={api}
                     edicion={edicion}
                     setEdicion={setEdicion}
